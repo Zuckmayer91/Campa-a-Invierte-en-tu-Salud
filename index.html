@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Chosen Palette: Corporate Wellness -->
+    <!-- Application Structure Plan: Se diseñó un tablero de control de una sola página con navegación fija. La estructura sigue un flujo lógico para un gerente: comienza con el objetivo principal (el QUÉ), explica la estrategia (el PORQUÉ), detalla el plan de ejecución interactivo (el CÓMO), muestra los recursos creativos (LOS ACTIVOS), visualiza los resultados esperados con un gráfico y controles deslizantes (el RESULTADO) y finaliza con la solicitud de aprobación (la ACCIÓN). Esta estructura facilita la comprensión rápida y la toma de decisiones al transformar un informe estático en una experiencia interactiva y digerible. -->
+    <!-- Visualization & Content Choices: 
+        - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
+        - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
+        - Recursos Creativos -> Organizar/Explorar -> Pestañas interactivas con previsualizaciones (HTML/CSS/JS) -> Interacción: Clic para cambiar de pestaña y ver los diferentes materiales -> Justificación: Centraliza todos los activos creativos (emails, SMS, WhatsApp) en un solo lugar para una revisión fácil y completa.
+        - KPIs y Proyecciones -> Comparar/Explorar -> Gráfico de dona con controles deslizantes (Chart.js/JS) -> Interacción: Deslizadores para ajustar proyecciones -> Justificación: Es el "factor sorpresa", permite al gerente realizar análisis "what-if" en tiempo real, lo que demuestra un dominio de los datos y aumenta la confianza en el plan.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3, .font-lexend {
+            font-family: 'Lexend', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin: auto;
+        }
+        .nav-link.active {
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .tab-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        .email-nav-btn.active {
+            background-color: #eef2ff;
+            color: #3730a3;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="font-lexend text-xl font-bold text-slate-900">
+                    Plan de Campaña Digital
+                </div>
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#objetivo" class="nav-link hover:text-blue-600 transition-colors">Estrategia</a>
+                    <a href="#ejecucion" class="nav-link hover:text-blue-600 transition-colors">Ejecución</a>
+                    <a href="#recursos" class="nav-link hover:text-blue-600 transition-colors">Recursos</a>
+                    <a href="#kpis" class="nav-link hover:text-blue-600 transition-colors">KPIs y Proyecciones</a>
+                    <a href="#aprobacion" class="nav-link bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Aprobación</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- SECCIÓN 1: OBJETIVO ESTRATÉGICO -->
+        <section id="objetivo" class="mb-20 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Campaña "Invierte en tu Salud"</h1>
+            <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-10">Un plan para reactivar nuestra base de datos, enfocándonos en una propuesta de valor que resuena con las necesidades actuales: el bienestar como la mejor inversión.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-lexend text-slate-900 text-3xl font-bold">1,650</h3>
+                    <p class="text-sm text-slate-500">Interesados en Base de Datos</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-lexend text-slate-900 text-3xl font-bold">Doble Inversión</h3>
+                    <p class="text-sm text-slate-500">Nuestro Mensaje Central</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-lexend text-slate-900 text-3xl font-bold">3 Días</h3>
+                    <p class="text-sm text-slate-500">Duración de la Campaña</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: PLAN DE EJECUCIÓN -->
+        <section id="ejecucion" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">Plan de Ejecución Multicanal</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Una campaña secuencial de 3 días para guiar al usuario desde la conciencia hasta la decisión. Haga clic en cada fase para ver los detalles.</p>
+            </div>
+            <div class="flex flex-col md:flex-row bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="md:w-1/2 p-8">
+                    <div id="timeline-details" class="transition-opacity duration-500">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h3 id="detail-title" class="font-lexend text-2xl font-bold text-slate-900">Fase 1: Impacto y Conciencia</h3>
+                            <p id="detail-day" class="text-sm font-medium text-blue-600 mb-3">Día 1</p>
+                        </div>
+                        <p class="font-semibold text-slate-800 mt-4 mb-2">Objetivo:</p>
+                        <p id="detail-objective" class="text-slate-600 mb-4">Captar la atención con el nuevo ángulo emocional y presentar el "porqué" de la inversión en bienestar.</p>
+                        <p class="font-semibold text-slate-800 mb-2">Acciones:</p>
+                        <ul id="detail-actions" class="text-slate-600 list-disc list-inside space-y-1">
+                            <li>Envío masivo de <strong>Email #1 (Enfoque Salud)</strong></li>
+                            <li>Envío masivo de <strong>SMS #1</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="md:w-1/2 p-8 bg-slate-50 border-t md:border-t-0 md:border-l border-slate-200 flex items-center">
+                    <div class="w-full">
+                        <div class="relative">
+                            <div class="absolute left-0 top-1/2 w-full h-1 bg-slate-300 rounded-full" aria-hidden="true"></div>
+                            <div class="relative flex justify-between items-center">
+                                <button data-day="1" class="timeline-dot z-10 flex flex-col items-center group cursor-pointer">
+                                    <div class="w-6 h-6 bg-white border-4 border-blue-500 rounded-full transition-all"></div>
+                                    <span class="mt-2 text-sm font-semibold text-blue-600">Día 1</span>
+                                </button>
+                                <button data-day="2" class="timeline-dot z-10 flex flex-col items-center group cursor-pointer">
+                                    <div class="w-4 h-4 bg-white border-2 border-slate-400 rounded-full transition-all group-hover:border-blue-500 group-hover:scale-125"></div>
+                                    <span class="mt-3 text-sm font-medium text-slate-500 group-hover:text-blue-600">Día 2</span>
+                                </button>
+                                <button data-day="3" class="timeline-dot z-10 flex flex-col items-center group cursor-pointer">
+                                    <div class="w-4 h-4 bg-white border-2 border-slate-400 rounded-full transition-all group-hover:border-blue-500 group-hover:scale-125"></div>
+                                    <span class="mt-3 text-sm font-medium text-slate-500 group-hover:text-blue-600">Día 3</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: RECURSOS DE LA CAMPAÑA -->
+        <section id="recursos" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">Recursos de la Campaña</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Previsualización de los activos creativos que se enviarán en cada canal.</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
+                <!-- Tabs -->
+                <div class="mb-6 border-b border-slate-200">
+                    <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                        <button data-tab="emails" class="tab-btn active whitespace-nowrap py-3 px-4 border-b-2 border-transparent font-medium text-sm text-slate-500 hover:text-blue-600 rounded-t-lg">
+                            ✉️ Emails
+                        </button>
+                        <button data-tab="sms" class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 border-transparent font-medium text-sm text-slate-500 hover:text-blue-600 rounded-t-lg">
+                            📱 SMS
+                        </button>
+                        <button data-tab="whatsapp" class="tab-btn whitespace-nowrap py-3 px-4 border-b-2 border-transparent font-medium text-sm text-slate-500 hover:text-blue-600 rounded-t-lg">
+                            💬 WhatsApp
+                        </button>
+                    </nav>
+                </div>
+                <!-- Tab Content -->
+                <div id="tab-content">
+                    <div id="emails-content" class="tab-pane">
+                        <div class="flex flex-col lg:flex-row gap-6">
+                            <div class="lg:w-1/4">
+                                <nav class="flex flex-col space-y-1">
+                                    <button data-email="1" class="email-nav-btn active text-left p-3 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="font-bold block">Email 1: Enfoque Salud</span>
+                                        <span class="text-xs text-slate-500">Día 1 - Conciencia</span>
+                                    </button>
+                                    <button data-email="2" class="email-nav-btn text-left p-3 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="font-bold block">Email 2: Foco en Web</span>
+                                        <span class="text-xs text-slate-500">Día 2 - Consideración</span>
+                                    </button>
+                                    <button data-email="3" class="email-nav-btn text-left p-3 rounded-lg hover:bg-slate-100 transition-colors">
+                                        <span class="font-bold block">Email 3: Contacto WA</span>
+                                        <span class="text-xs text-slate-500">Día 3 - Decisión</span>
+                                    </button>
+                                </nav>
+                            </div>
+                            <div class="lg:w-3/4 bg-slate-100 rounded-lg p-2">
+                                <iframe id="email-preview" class="w-full h-96 rounded-md border-2 border-slate-200" srcdoc=""></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sms-content" class="tab-pane hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <h4 class="font-bold text-slate-800 mb-2">SMS 1: Directo</h4>
+                                <div class="bg-white p-3 rounded-lg shadow-inner">
+                                    <p class="text-sm">Hola *|NOMBRE|*, invierte en tu activo más valioso: tu salud. Lotes campestres para una vida sin estrés. Conoce más aquí: https://www.aypch.com/</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <h4 class="font-bold text-slate-800 mb-2">SMS 2: Problema</h4>
+                                <div class="bg-white p-3 rounded-lg shadow-inner">
+                                    <p class="text-sm">¿Cansado del ruido y el afán? Tu bienestar es primero. Descubre tu refugio de paz en el Valle del Cauca. Info: https://www.aypch.com/</p>
+                                </div>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded-lg">
+                                <h4 class="font-bold text-slate-800 mb-2">SMS 3: Beneficio</h4>
+                                <div class="bg-white p-3 rounded-lg shadow-inner">
+                                    <p class="text-sm">Respira aire puro, vive tranquilo. Elige un futuro más saludable para ti y tu familia. Explora nuestros proyectos: https://www.aypch.com/</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="whatsapp-content" class="tab-pane hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                             <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h4 class="font-bold text-green-800 mb-2">Plantilla 1: Inspiradora</h4>
+                                <div class="bg-white p-3 rounded-xl shadow-sm">
+                                    <p class="text-sm">¡Hola *|NOMBRE|*! 👋<br><br>¿Has pensado cuánto vale tu tranquilidad? Te invitamos a descubrir nuestros proyectos campestres, diseñados para que tú y tu familia respiren aire puro.<br><br>✨ Dale un vistazo aquí: https://www.aypch.com/</p>
+                                </div>
+                            </div>
+                             <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h4 class="font-bold text-green-800 mb-2">Plantilla 2: Beneficios</h4>
+                                <div class="bg-white p-3 rounded-xl shadow-sm">
+                                    <p class="text-sm">¡Hola *|NOMBRE|*! 🌿 Tu salud te lo agradecerá.<br><br>Imagina un lugar donde puedas:<br>✅ Despertar con la naturaleza.<br>✅ Disfrutar de aire 100% puro.<br>✅ Tener espacio para caminar y jugar.<br><br>👉 Ver Proyectos: https://www.aypch.com/</p>
+                                </div>
+                            </div>
+                             <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h4 class="font-bold text-green-800 mb-2">Plantilla 3: Conversacional</h4>
+                                <div class="bg-white p-3 rounded-xl shadow-sm">
+                                    <p class="text-sm">¡Hola *|NOMBRE|*! Te saluda [Tu Nombre] de AYPCH.<br><br>Vi que te interesa mejorar tu calidad de vida. ¿Te gustaría recibir información exclusiva sobre nuestros proyectos sin ningún compromiso?<br><br>Puedes ver todos los detalles en nuestro sitio web: https://www.aypch.com/</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: KPIS Y PROYECCIONES -->
+        <section id="kpis" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">KPIs y Proyecciones Interactivas</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Visualice el impacto potencial de la campaña. Ajuste los controles deslizantes para explorar diferentes escenarios.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="font-lexend text-xl font-bold text-slate-900 mb-6">Proyecciones de Conversión</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="open-rate-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Apertura de Correo (<span id="open-rate-value">25</span>%)</label>
+                            <input id="open-rate-slider" type="range" min="10" max="50" value="25" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <label for="ctr-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Clics (CTR) (<span id="ctr-value">10</span>%)</label>
+                            <input id="ctr-slider" type="range" min="1" max="20" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <label for="lead-conversion-slider" class="block text-sm font-medium text-slate-700 mb-1">Conversión a Cita (<span id="lead-conversion-value">30</span>%)</label>
+                            <input id="lead-conversion-slider" type="range" min="10" max="60" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+                     <div class="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div>
+                            <p class="text-sm text-slate-500">Usuarios con Apertura</p>
+                            <p id="projected-opens" class="font-lexend text-2xl font-bold text-slate-900">413</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">Leads (Clics)</p>
+                            <p id="projected-leads" class="font-lexend text-2xl font-bold text-blue-600">41</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-500">Citas Agendadas</p>
+                            <p id="projected-appointments" class="font-lexend text-2xl font-bold text-green-600">12</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="chart-container">
+                        <canvas id="projectionChart"></canvas>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-4 text-center">Desglose del Funnel de Proyección</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: APROBACIÓN -->
+        <section id="aprobacion" class="bg-white rounded-xl shadow-lg border border-slate-200 p-8 md:p-12">
+             <div class="text-center">
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">Solicitud de Aprobación</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto mb-8">Esta campaña está diseñada para maximizar el ROI de nuestra base de datos existente, utilizando una estrategia relevante y un plan de ejecución medible. Solicitamos la aprobación para proceder con el lanzamiento.</p>
+                <div class="flex justify-center items-center space-x-8 mb-8">
+                    <div class="text-center">
+                        <p class="text-sm text-slate-500 mb-1">Herramientas</p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                           <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">RD Station</span>
+                           <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">SMS Masivo</span>
+                           <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-green-700 transition-transform hover:scale-105">
+                    Aprobar Lanzamiento de Campaña
+                </button>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center py-8">
+        <p class="text-sm text-slate-500">&copy; 2025 Asesorías y Parcelaciones CH. Presentación Interna.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalDatabase = 1650;
+
+            // Timeline interaction
+            const timelineDots = document.querySelectorAll('.timeline-dot');
+            const detailTitle = document.getElementById('detail-title');
+            const detailDay = document.getElementById('detail-day');
+            const detailObjective = document.getElementById('detail-objective');
+            const detailActions = document.getElementById('detail-actions');
+            const timelineDetailsContainer = document.getElementById('timeline-details');
+
+            const timelineData = {
+                '1': {
+                    title: 'Fase 1: Impacto y Conciencia',
+                    day: 'Día 1',
+                    objective: 'Captar la atención con el nuevo ángulo emocional y presentar el "porqué" de la inversión en bienestar.',
+                    actions: [
+                        'Envío masivo de <strong>Email #1 (Enfoque Salud)</strong>',
+                        'Envío masivo de <strong>SMS #1</strong>'
+                    ]
+                },
+                '2': {
+                    title: 'Fase 2: Consideración y Tráfico',
+                    day: 'Día 2',
+                    objective: 'Dirigir el interés generado hacia nuestro sitio web para que exploren los proyectos y la propuesta de valor completa.',
+                    actions: [
+                        'Envío de <strong>Email #2 (Redirección a Web)</strong>',
+                        'Envío de <strong>SMS #2</strong>'
+                    ]
+                },
+                '3': {
+                    title: 'Fase 3: Urgencia y Decisión',
+                    day: 'Día 3',
+                    objective: 'Crear un sentido de oportunidad y motivar a los interesados a no dejar pasar la decisión de invertir en su futuro.',
+                    actions: [
+                        'Envío de <strong>Email #3 (Resumen/Última Llamada)</strong>',
+                        'Envío de <strong>SMS #3</strong>'
+                    ]
+                }
+            };
+
+            timelineDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const day = dot.dataset.day;
+                    const data = timelineData[day];
+
+                    timelineDetailsContainer.style.opacity = 0;
+
+                    setTimeout(() => {
+                        detailTitle.textContent = data.title;
+                        detailDay.textContent = data.day;
+                        detailObjective.textContent = data.objective;
+                        detailActions.innerHTML = data.actions.map(action => `<li>${action}</li>`).join('');
+                        timelineDetailsContainer.style.opacity = 1;
+                    }, 300);
+
+                    timelineDots.forEach(d => {
+                        d.querySelector('div').classList.remove('w-6', 'h-6', 'border-4', 'border-blue-500');
+                        d.querySelector('div').classList.add('w-4', 'h-4', 'border-2', 'border-slate-400');
+                        d.querySelector('span').classList.remove('text-blue-600', 'font-semibold');
+                        d.querySelector('span').classList.add('text-slate-500', 'font-medium');
+                    });
+
+                    dot.querySelector('div').classList.add('w-6', 'h-6', 'border-4', 'border-blue-500');
+                    dot.querySelector('div').classList.remove('w-4', 'h-4', 'border-2', 'border-slate-400');
+                    dot.querySelector('span').classList.add('text-blue-600', 'font-semibold');
+                    dot.querySelector('span').classList.remove('text-slate-500', 'font-medium');
+                });
+            });
+
+            // Resources Tab interaction
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tab = btn.dataset.tab;
+
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === `${tab}-content`) {
+                            pane.classList.remove('hidden');
+                        } else {
+                            pane.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+            
+            const emailNavBtns = document.querySelectorAll('.email-nav-btn');
+            const emailPreview = document.getElementById('email-preview');
+            
+            const emailTemplates = {
+                '1': `
+                    <div style="font-family: sans-serif; padding: 20px; text-align: center; background-color: #f0fdf4;">
+                        <img src="https://ftyatux.stripocdn.email/content/guids/CABINET_bd1c711cfd2c7f0be157ee75471a970e17de5a755591d0c85c2d63fbbf9d96cf/images/chica_salud.png" alt="Imagen de salud" style="width:100%; max-width: 600px;">
+                        <h2 style="color: #14532d;">Invierte en tu Activo más Preciado: Tu Salud</h2>
+                        <p>Hola *|NOMBRE|*, en la búsqueda del éxito, a menudo sacrificamos nuestra paz. Te invitamos a considerar una inversión en ti.</p>
+                        <a href="https://www.aypch.com/" style="background-color: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Conoce Más Sobre Bienestar</a>
+                    </div>`,
+                '2': `
+                    <div style="font-family: sans-serif; padding: 20px; text-align: center; background-color: #eff6ff;">
+                         <img src="https://ftyatux.stripocdn.email/content/guids/CABINET_39e0f84f4f8b2b9ec7be86c3a8be9dec1bd7c04840e37cf10861a776dd82a39e/images/proyecto_nuevo_2.jpg" alt="Imagen de proyecto" style="width:100%; max-width: 600px;">
+                        <h2 style="color: #1e3a8a;">La Doble Ganancia: Bienestar y Patrimonio</h2>
+                        <p>Ayer hablamos de salud. Hoy te mostramos cómo esa inversión también es la más inteligente para tu futuro financiero. La tierra se valoriza.</p>
+                        <a href="https://aypch.com/lotes-campestres-valle-del-cauca/" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Explora los Proyectos</a>
+                    </div>`,
+                '3': `
+                    <div style="font-family: sans-serif; padding: 20px; text-align: center; background-color: #f0fdfa;">
+                        <img src="https://ftyatux.stripocdn.email/content/guids/CABINET_1f1e0e8937823fc0aca655a561bd3484c0a10edd21f9a2837d73c8c364030968/images/proyecto_nuevo_1.jpg" alt="Imagen de familia" style="width:100%; max-width: 600px;">
+                        <h2 style="color: #0f766e;">¿Listo para Conversar?</h2>
+                        <p>Has visto los beneficios para tu salud y tu patrimonio. El siguiente paso es una conversación sin compromiso para resolver tus dudas.</p>
+                        <a href="https://wa.link/xc6a7s" style="background-color: #0d9488; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Hablar con un Asesor por WhatsApp</a>
+                    </div>`
+            };
+            
+            function updateEmailPreview(emailId) {
+                emailPreview.srcdoc = emailTemplates[emailId];
+                emailNavBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.email === emailId) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+            
+            emailNavBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    updateEmailPreview(btn.dataset.email);
+                });
+            });
+            
+            // Initialize first view
+            document.getElementById('emails-content').classList.remove('hidden');
+            updateEmailPreview('1');
+
+            // Chart.js and sliders
+            const openRateSlider = document.getElementById('open-rate-slider');
+            const ctrSlider = document.getElementById('ctr-slider');
+            const leadConversionSlider = document.getElementById('lead-conversion-slider');
+
+            const openRateValue = document.getElementById('open-rate-value');
+            const ctrValue = document.getElementById('ctr-value');
+            const leadConversionValue = document.getElementById('lead-conversion-value');
+            
+            const projectedOpens = document.getElementById('projected-opens');
+            const projectedLeads = document.getElementById('projected-leads');
+            const projectedAppointments = document.getElementById('projected-appointments');
+
+            const ctx = document.getElementById('projectionChart').getContext('2d');
+            const projectionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['No Abrieron', 'Abrieron pero no Clicaron', 'Leads (Clics)', 'Citas Agendadas'],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            '#e2e8f0', // slate-200
+                            '#60a5fa', // blue-400
+                            '#2563eb', // blue-600
+                            '#16a34a'  // green-600
+                        ],
+                        borderColor: '#f8fafc',
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                boxWidth: 12,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            function updateProjections() {
+                const openRate = parseInt(openRateSlider.value) / 100;
+                const ctr = parseInt(ctrSlider.value) / 100;
+                const leadConversion = parseInt(leadConversionSlider.value) / 100;
+
+                openRateValue.textContent = openRateSlider.value;
+                ctrValue.textContent = ctrSlider.value;
+                leadConversionValue.textContent = leadConversionSlider.value;
+                
+                const opens = Math.round(totalDatabase * openRate);
+                const leads = Math.round(opens * ctr);
+                const appointments = Math.round(leads * leadConversion);
+
+                projectedOpens.textContent = opens.toLocaleString();
+                projectedLeads.textContent = leads.toLocaleString();
+                projectedAppointments.textContent = appointments.toLocaleString();
+
+                const openedNoClick = opens - leads;
+                const noOpen = totalDatabase - opens;
+                
+                projectionChart.data.datasets[0].data = [noOpen, openedNoClick, leads, appointments];
+                projectionChart.update();
+            }
+
+            openRateSlider.addEventListener('input', updateProjections);
+            ctrSlider.addEventListener('input', updateProjections);
+            leadConversionSlider.addEventListener('input', updateProjections);
+
+            updateProjections();
+            
+            // Active nav link scrolling
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href') === `#${current}`){
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
