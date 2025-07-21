@@ -419,7 +419,7 @@
         // Importar funciones de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONFIGURACIÓN DE FIREBASE ---
         const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -442,6 +442,7 @@
         const auth = getAuth(app);
         
         let campaignDocRef;
+        let campaignData = {}; // Variable para mantener el estado de los datos
 
         document.addEventListener('DOMContentLoaded', () => {
             const totalDatabase = 1650;
@@ -603,10 +604,10 @@
 
             async function saveEmailContentToFirestore() {
                 if (!campaignDocRef) return;
-                const fieldName = `emails.email_${currentEmailId}_content`;
+                const fieldPath = `emails.email_${currentEmailId}_content`;
                 const newContent = emailPreview.contentDocument.documentElement.outerHTML;
                 try {
-                    await setDoc(campaignDocRef, { emails: { [fieldName.split('.')[1]]: newContent } }, { merge: true });
+                    await updateDoc(campaignDocRef, { [fieldPath]: newContent });
                     showSaveNotification('¡Cambios guardados en la nube!');
                 } catch (error) {
                     console.error("Error saving email to Firestore: ", error);
@@ -640,9 +641,9 @@
                     reader.onload = async (e) => {
                         const content = e.target.result;
                         emailPreview.srcdoc = content;
-                        const fieldName = `emails.email_${currentEmailId}_content`;
+                        const fieldPath = `emails.email_${currentEmailId}_content`;
                         try {
-                            await setDoc(campaignDocRef, { emails: { [fieldName.split('.')[1]]: content } }, { merge: true });
+                            await updateDoc(campaignDocRef, { [fieldPath]: content });
                             showSaveNotification('¡Plantilla cargada y guardada!');
                         } catch (error) {
                             console.error("Error uploading email to Firestore: ", error);
@@ -657,8 +658,8 @@
             });
 
             emailNavBtns.forEach(btn => {
-                btn.addEventListener('click', async () => {
-                     updateEmailPreview(btn.dataset.email, {});
+                btn.addEventListener('click', () => {
+                    updateEmailPreview(btn.dataset.email, campaignData);
                 });
             });
             
@@ -703,7 +704,6 @@
             saveWaBtn.addEventListener('click', saveWaToFirestore);
 
             // --- LÓGICA DE KPIS Y GRÁFICO ---
-            // Elementos de Proyecciones
             const openRateSlider = document.getElementById('open-rate-slider');
             const ctrSlider = document.getElementById('ctr-slider');
             const leadConversionSlider = document.getElementById('lead-conversion-slider');
@@ -713,14 +713,11 @@
             const projectedOpens = document.getElementById('projected-opens');
             const projectedLeads = document.getElementById('projected-leads');
             const projectedAppointments = document.getElementById('projected-appointments');
-
-            // Elementos de Resultados Reales
             const realOpensInput = document.getElementById('real-opens-input');
             const realClicksInput = document.getElementById('real-clicks-input');
             const realAppointmentsInput = document.getElementById('real-appointments-input');
             const saveRealResultsBtn = document.getElementById('save-real-results-btn');
 
-            // Gráfico
             const ctx = document.getElementById('comparisonChart').getContext('2d');
             const comparisonChart = new Chart(ctx, {
                 type: 'bar',
@@ -749,34 +746,28 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                color: '#475569' // slate-600
-                            }
+                            ticks: { color: '#475569' }
                         },
                         x: {
-                             ticks: {
-                                color: '#475569' // slate-600
-                            }
+                             ticks: { color: '#475569' }
                         }
                     },
                     plugins: {
                         legend: {
                             position: 'top',
-                            labels: {
-                                color: '#475569' // slate-600
-                            }
+                            labels: { color: '#475569' }
                         },
                         title: {
                             display: true,
                             text: 'Rendimiento de la Campaña',
-                            color: '#1e293b' // slate-800
+                            color: '#1e293b',
+                            font: { size: 16, family: "'Lexend', sans-serif" }
                         }
                     }
                 }
             });
 
             function updateChart() {
-                // Datos Proyectados (de los sliders)
                 const openRate = parseInt(openRateSlider.value) / 100;
                 const ctr = parseInt(ctrSlider.value) / 100;
                 const leadConversion = parseInt(leadConversionSlider.value) / 100;
@@ -784,12 +775,10 @@
                 const projectedLeadsNum = Math.round(projectedOpensNum * ctr);
                 const projectedAppointmentsNum = Math.round(projectedLeadsNum * leadConversion);
 
-                // Datos Reales (de los inputs)
                 const realOpensNum = Number(realOpensInput.value) || 0;
                 const realClicksNum = Number(realClicksInput.value) || 0;
                 const realAppointmentsNum = Number(realAppointmentsInput.value) || 0;
 
-                // Actualizar datasets del gráfico
                 comparisonChart.data.datasets[0].data = [projectedOpensNum, projectedLeadsNum, projectedAppointmentsNum];
                 comparisonChart.data.datasets[1].data = [realOpensNum, realClicksNum, realAppointmentsNum];
                 
@@ -847,15 +836,12 @@
                 }
             }
             
-            // Event Listeners para Proyecciones
             openRateSlider.addEventListener('input', updateProjectionUI);
             ctrSlider.addEventListener('input', updateProjectionUI);
             leadConversionSlider.addEventListener('input', updateProjectionUI);
             openRateSlider.addEventListener('change', saveProjectionsToFirestore);
             ctrSlider.addEventListener('change', saveProjectionsToFirestore);
             leadConversionSlider.addEventListener('change', saveProjectionsToFirestore);
-
-            // Event Listeners para Resultados Reales
             saveRealResultsBtn.addEventListener('click', saveRealResultsToFirestore);
             realOpensInput.addEventListener('input', updateChart);
             realClicksInput.addEventListener('input', updateChart);
@@ -997,39 +983,39 @@
 
             // --- FUNCIÓN PRINCIPAL DE CARGA DE DATOS DESDE FIRESTORE ---
             function loadAllDataFromFirestore(doc) {
-                const data = doc.exists() ? doc.data() : {};
+                campaignData = doc.exists() ? doc.data() : {};
 
                 // Cargar Emails, SMS, WhatsApp
-                updateEmailPreview(currentEmailId, data);
-                if (data.sms) {
-                    smsEditors[0].value = data.sms.sms_1_content || '';
-                    smsEditors[1].value = data.sms.sms_2_content || '';
-                    smsEditors[2].value = data.sms.sms_3_content || '';
+                updateEmailPreview(currentEmailId, campaignData);
+                if (campaignData.sms) {
+                    smsEditors[0].value = campaignData.sms.sms_1_content || '';
+                    smsEditors[1].value = campaignData.sms.sms_2_content || '';
+                    smsEditors[2].value = campaignData.sms.sms_3_content || '';
                 }
-                if (data.whatsapp) {
-                    waEditors[0].value = data.whatsapp.wa_1_content || '';
-                    waEditors[1].value = data.whatsapp.wa_2_content || '';
-                    waEditors[2].value = data.whatsapp.wa_3_content || '';
+                if (campaignData.whatsapp) {
+                    waEditors[0].value = campaignData.whatsapp.wa_1_content || '';
+                    waEditors[1].value = campaignData.whatsapp.wa_2_content || '';
+                    waEditors[2].value = campaignData.whatsapp.wa_3_content || '';
                 }
 
                 // Cargar KPIs
-                if (data.kpis) {
-                    if (data.kpis.projections) {
-                        openRateSlider.value = data.kpis.projections.open_rate || 25;
-                        ctrSlider.value = data.kpis.projections.ctr || 10;
-                        leadConversionSlider.value = data.kpis.projections.lead_conversion || 30;
+                if (campaignData.kpis) {
+                    if (campaignData.kpis.projections) {
+                        openRateSlider.value = campaignData.kpis.projections.open_rate || 25;
+                        ctrSlider.value = campaignData.kpis.projections.ctr || 10;
+                        leadConversionSlider.value = campaignData.kpis.projections.lead_conversion || 30;
                     }
-                    if (data.kpis.real_results) {
-                        realOpensInput.value = data.kpis.real_results.opens || '';
-                        realClicksInput.value = data.kpis.real_results.clicks || '';
-                        realAppointmentsInput.value = data.kpis.real_results.appointments || '';
+                    if (campaignData.kpis.real_results) {
+                        realOpensInput.value = campaignData.kpis.real_results.opens || '';
+                        realClicksInput.value = campaignData.kpis.real_results.clicks || '';
+                        realAppointmentsInput.value = campaignData.kpis.real_results.appointments || '';
                     }
                 }
                 
-                updateProjectionUI(); // Esto actualiza los textos de proyección y llama a updateChart()
+                updateProjectionUI();
 
                 // Cargar Estado de Aprobación
-                setApprovalState(data.approval);
+                setApprovalState(campaignData.approval);
             }
 
             // --- INICIALIZACIÓN DE AUTENTICACIÓN Y DATOS ---
