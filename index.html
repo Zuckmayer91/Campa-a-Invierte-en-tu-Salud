@@ -10,6 +10,7 @@
          - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
          - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (localStorage) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo completo que permite al gerente usar plantillas externas, editarlas visualmente y exportar el resultado.
          - KPIs y Proyecciones -> Comparar/Explorar -> Gráfico de dona con controles deslizantes (Chart.js/JS) -> Interacción: Deslizadores para ajustar proyecciones -> Justificación: Es el "factor sorpresa", permite al gerente realizar análisis "what-if" en tiempo real, lo que demuestra un dominio de los datos y aumenta la confianza en el plan.
+         - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (HTML/CSS/JS) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: Se añade flexibilidad al proceso de aprobación, permitiendo al gerente revertir una decisión, lo que refleja un flujo de trabajo más realista.
          - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -97,7 +98,7 @@
                     <a href="#ejecucion" class="nav-link hover:text-blue-600 transition-colors">Ejecución</a>
                     <a href="#recursos" class="nav-link hover:text-blue-600 transition-colors">Recursos</a>
                     <a href="#kpis" class="nav-link hover:text-blue-600 transition-colors">KPIs y Proyecciones</a>
-                    <a href="#aprobacion" class="nav-link bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Aprobación</a>
+                    <a href="#aprobacion" class="nav-link hover:text-blue-600 transition-colors">Aprobación</a>
                 </div>
             </div>
         </nav>
@@ -221,8 +222,8 @@
                                     </div>
                                 </div>
                                 <div class="text-right flex flex-wrap justify-end gap-3">
-                                    <button id="upload-email-btn" class="bg-slate-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors">Subir HTML</button>
                                     <button id="save-email-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Guardar Cambios</button>
+                                    <button id="upload-email-btn" class="bg-slate-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors">Subir HTML</button>
                                     <button id="download-email-btn" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">Descargar HTML</button>
                                 </div>
                             </div>
@@ -320,22 +321,35 @@
 
         <!-- SECCIÓN 5: APROBACIÓN -->
         <section id="aprobacion" class="bg-white rounded-xl shadow-lg border border-slate-200 p-8 md:p-12">
-             <div class="text-center">
+            <div class="text-center">
                 <h2 class="text-3xl font-bold text-slate-900 mb-3">Solicitud de Aprobación</h2>
-                <p class="text-slate-600 max-w-2xl mx-auto mb-8">Esta campaña está diseñada para maximizar el ROI de nuestra base de datos existente, utilizando una estrategia relevante y un plan de ejecución medible. Solicitamos la aprobación para proceder con el lanzamiento.</p>
-                <div class="flex justify-center items-center space-x-8 mb-8">
-                    <div class="text-center">
-                        <p class="text-sm text-slate-500 mb-1">Herramientas</p>
-                        <div class="flex flex-wrap justify-center gap-2">
-                           <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">RD Station</span>
-                           <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">SMS Masivo</span>
-                           <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">WhatsApp</span>
+                <div id="approval-status-container" class="hidden">
+                    <!-- El estado de la aprobación se mostrará aquí -->
+                </div>
+                <div id="approval-pending-container">
+                    <p class="text-slate-600 max-w-2xl mx-auto mb-8">Esta campaña está diseñada para maximizar el ROI de nuestra base de datos existente, utilizando una estrategia relevante y un plan de ejecución medible. Por favor, revise y tome una acción.</p>
+                    <div class="flex justify-center items-center space-x-8 mb-8">
+                        <div class="text-center">
+                            <p class="text-sm text-slate-500 mb-1">Herramientas</p>
+                            <div class="flex flex-wrap justify-center gap-2">
+                               <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">RD Station</span>
+                               <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">SMS Masivo</span>
+                               <span class="bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">WhatsApp</span>
+                            </div>
                         </div>
                     </div>
+                    <div id="approval-buttons" class="flex flex-wrap justify-center gap-4">
+                        <button id="approve-btn" class="bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-green-700 transition-transform hover:scale-105">
+                            ✓ Aprobar Campaña
+                        </button>
+                        <button id="request-changes-btn" class="bg-yellow-500 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-yellow-600 transition-transform hover:scale-105">
+                            ✎ Solicitar Cambios
+                        </button>
+                        <button id="reject-btn" class="bg-red-600 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-red-700 transition-transform hover:scale-105">
+                            ✗ Rechazar
+                        </button>
+                    </div>
                 </div>
-                <button class="bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg hover:bg-green-700 transition-transform hover:scale-105">
-                    Aprobar Lanzamiento de Campaña
-                </button>
             </div>
         </section>
 
@@ -350,6 +364,18 @@
     
     <!-- Input de archivo oculto para la subida de HTML -->
     <input type="file" id="file-input" class="hidden" accept=".html">
+
+    <!-- Modal para Feedback de Aprobación -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h3 id="feedback-modal-title" class="text-2xl font-bold text-slate-900 mb-4"></h3>
+            <textarea id="feedback-comments" class="editable-textarea w-full" rows="5" placeholder="Por favor, especifique los cambios requeridos o la razón del rechazo..."></textarea>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancel-feedback-btn" class="bg-slate-200 text-slate-800 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300">Cancelar</button>
+                <button id="submit-feedback-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700">Enviar Feedback</button>
+            </div>
+        </div>
+    </div>
 
 
     <script>
@@ -505,7 +531,6 @@
                     reader.onload = (e) => {
                         const content = e.target.result;
                         emailPreview.srcdoc = content;
-                        // Forzar el guardado del contenido subido en el localStorage del email actual
                         const storageKey = `email_content_${currentEmailId}`;
                         localStorage.setItem(storageKey, content);
                         showSaveNotification('¡Plantilla cargada!');
@@ -514,7 +539,6 @@
                 } else {
                     alert('Por favor, seleccione un archivo HTML válido.');
                 }
-                // Resetear el input para permitir subir el mismo archivo de nuevo
                 event.target.value = '';
             });
 
@@ -623,6 +647,152 @@
             leadConversionSlider.addEventListener('input', updateProjections);
             updateProjections();
             
+            // --- LÓGICA DE APROBACIÓN ---
+            const approvalStatusContainer = document.getElementById('approval-status-container');
+            const approvalPendingContainer = document.getElementById('approval-pending-container');
+            const approveBtn = document.getElementById('approve-btn');
+            const requestChangesBtn = document.getElementById('request-changes-btn');
+            const rejectBtn = document.getElementById('reject-btn');
+            
+            const feedbackModal = document.getElementById('feedback-modal');
+            const feedbackModalTitle = document.getElementById('feedback-modal-title');
+            const feedbackComments = document.getElementById('feedback-comments');
+            const cancelFeedbackBtn = document.getElementById('cancel-feedback-btn');
+            const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
+            let currentDecision = '';
+
+            function setApprovalState(status, date, comments) {
+                approvalPendingContainer.classList.add('hidden');
+                approvalStatusContainer.classList.remove('hidden');
+
+                let statusHTML = '';
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                const formattedDate = new Date(date).toLocaleDateString('es-ES', options);
+                const resetBtnHTML = `<button id="reset-approval-btn" class="bg-white text-slate-700 font-semibold py-2 px-4 rounded-lg border border-slate-300 hover:bg-slate-100 text-sm">Cambiar Decisión</button>`;
+
+                switch(status) {
+                    case 'Aprobado':
+                        statusHTML = `
+                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r-lg" role="alert">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-bold text-lg">Campaña Aprobada</p>
+                                        <p class="text-sm">Decisión tomada el: ${formattedDate}</p>
+                                    </div>
+                                    ${resetBtnHTML}
+                                </div>
+                            </div>`;
+                        break;
+                    case 'Cambios Solicitados':
+                         statusHTML = `
+                            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg" role="alert">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-lg">Se Solicitaron Cambios</p>
+                                        <p class="text-sm">Decisión tomada el: ${formattedDate}</p>
+                                        <p class="mt-2 text-sm italic"><strong>Comentarios:</strong> "${comments}"</p>
+                                    </div>
+                                    ${resetBtnHTML}
+                                </div>
+                            </div>`;
+                        break;
+                    case 'Rechazado':
+                        statusHTML = `
+                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg" role="alert">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-lg">Campaña Rechazada</p>
+                                        <p class="text-sm">Decisión tomada el: ${formattedDate}</p>
+                                        <p class="mt-2 text-sm italic"><strong>Justificación:</strong> "${comments}"</p>
+                                    </div>
+                                    ${resetBtnHTML}
+                                </div>
+                            </div>`;
+                        break;
+                }
+                approvalStatusContainer.innerHTML = statusHTML;
+                
+                // Add event listener to the newly created button
+                document.getElementById('reset-approval-btn').addEventListener('click', () => {
+                    if (confirm('¿Está seguro de que desea cambiar su decisión? El estado actual se borrará.')) {
+                        localStorage.removeItem('campaign_approval_status');
+                        localStorage.removeItem('campaign_approval_date');
+                        localStorage.removeItem('campaign_approval_comments');
+                        
+                        approvalStatusContainer.classList.add('hidden');
+                        approvalPendingContainer.classList.remove('hidden');
+                    }
+                });
+            }
+
+            function loadApprovalStatus() {
+                const status = localStorage.getItem('campaign_approval_status');
+                const date = localStorage.getItem('campaign_approval_date');
+                const comments = localStorage.getItem('campaign_approval_comments');
+
+                if (status && date) {
+                    setApprovalState(status, date, comments);
+                }
+            }
+
+            function saveApprovalStatus(status, comments) {
+                const date = new Date().toISOString();
+                localStorage.setItem('campaign_approval_status', status);
+                localStorage.setItem('campaign_approval_date', date);
+                localStorage.setItem('campaign_approval_comments', comments);
+                setApprovalState(status, date, comments);
+            }
+
+            approveBtn.addEventListener('click', () => {
+                if (confirm('¿Está seguro de que desea aprobar esta campaña?')) {
+                    saveApprovalStatus('Aprobado', '');
+                }
+            });
+
+            requestChangesBtn.addEventListener('click', () => {
+                currentDecision = 'Cambios Solicitados';
+                feedbackModalTitle.textContent = 'Solicitar Cambios';
+                feedbackComments.value = '';
+                feedbackComments.placeholder = 'Especifique los cambios requeridos...';
+                feedbackModal.classList.remove('hidden');
+                feedbackModal.classList.add('flex');
+            });
+
+            rejectBtn.addEventListener('click', () => {
+                currentDecision = 'Rechazado';
+                feedbackModalTitle.textContent = 'Rechazar Campaña';
+                feedbackComments.value = '';
+                feedbackComments.placeholder = 'Justifique la razón del rechazo...';
+                feedbackModal.classList.remove('hidden');
+                feedbackModal.classList.add('flex');
+            });
+
+            cancelFeedbackBtn.addEventListener('click', () => {
+                feedbackModal.classList.add('hidden');
+                feedbackModal.classList.remove('flex');
+            });
+            
+            feedbackModal.addEventListener('click', (e) => {
+                if (e.target === feedbackModal) {
+                    feedbackModal.classList.add('hidden');
+                    feedbackModal.classList.remove('flex');
+                }
+            });
+
+            submitFeedbackBtn.addEventListener('click', () => {
+                const comments = feedbackComments.value.trim();
+                if (comments) {
+                    saveApprovalStatus(currentDecision, comments);
+                    feedbackModal.classList.add('hidden');
+                    feedbackModal.classList.remove('flex');
+                } else {
+                    alert('Por favor, ingrese sus comentarios.');
+                }
+            });
+
+            // Cargar estado al iniciar
+            loadApprovalStatus();
+
             // --- LÓGICA DE NAVEGACIÓN ACTIVA (SIN CAMBIOS) ---
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
