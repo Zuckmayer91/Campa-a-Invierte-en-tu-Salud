@@ -9,7 +9,7 @@
          - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
          - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
          - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (localStorage) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo completo que permite al gerente usar plantillas externas, editarlas visualmente y exportar el resultado.
-         - KPIs y Proyecciones -> Comparar/Explorar -> Gráfico de dona con controles deslizantes (Chart.js/JS) -> Interacción: Deslizadores para ajustar proyecciones -> Justificación: Es el "factor sorpresa", permite al gerente realizar análisis "what-if" en tiempo real, lo que demuestra un dominio de los datos y aumenta la confianza en el plan.
+         - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de dona con controles deslizantes y un nuevo módulo para registrar visitas reales (guardado en localStorage) -> Interacción: Ajustar proyecciones e ingresar datos reales -> Justificación: Se cierra el ciclo de análisis permitiendo comparar las proyecciones con los resultados de ventas reales, haciendo del tablero una herramienta de seguimiento completa.
          - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (HTML/CSS/JS) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: Se añade flexibilidad al proceso de aprobación, permitiendo al gerente revertir una decisión, lo que refleja un flujo de trabajo más realista.
          - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
@@ -275,42 +275,58 @@
         <section id="kpis" class="mb-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-900 mb-3">KPIs y Proyecciones Interactivas</h2>
-                <p class="text-slate-600 max-w-2xl mx-auto">Visualice el impacto potencial de la campaña. Ajuste los controles deslizantes para explorar diferentes escenarios.</p>
+                <p class="text-slate-600 max-w-2xl mx-auto">Visualice el impacto potencial y registre los resultados reales de la campaña.</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                    <h3 class="font-lexend text-xl font-bold text-slate-900 mb-6">Proyecciones de Conversión</h3>
-                    <div class="space-y-6">
-                        <div>
-                            <label for="open-rate-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Apertura de Correo (<span id="open-rate-value">25</span>%)</label>
-                            <input id="open-rate-slider" type="range" min="10" max="50" value="25" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div class="flex flex-col gap-8">
+                    <!-- Projections Card -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="font-lexend text-xl font-bold text-slate-900 mb-6">Proyecciones de Conversión</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="open-rate-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Apertura de Correo (<span id="open-rate-value">25</span>%)</label>
+                                <input id="open-rate-slider" type="range" min="10" max="50" value="25" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label for="ctr-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Clics (CTR) (<span id="ctr-value">10</span>%)</label>
+                                <input id="ctr-slider" type="range" min="1" max="20" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label for="lead-conversion-slider" class="block text-sm font-medium text-slate-700 mb-1">Conversión a Cita (<span id="lead-conversion-value">30</span>%)</label>
+                                <input id="lead-conversion-slider" type="range" min="10" max="60" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
                         </div>
-                        <div>
-                            <label for="ctr-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Clics (CTR) (<span id="ctr-value">10</span>%)</label>
-                            <input id="ctr-slider" type="range" min="1" max="20" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
-                        </div>
-                        <div>
-                            <label for="lead-conversion-slider" class="block text-sm font-medium text-slate-700 mb-1">Conversión a Cita (<span id="lead-conversion-value">30</span>%)</label>
-                            <input id="lead-conversion-slider" type="range" min="10" max="60" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                         <div class="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                            <div>
+                                <p class="text-sm text-slate-500">Usuarios con Apertura</p>
+                                <p id="projected-opens" class="font-lexend text-2xl font-bold text-slate-900">413</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500">Leads (Clics)</p>
+                                <p id="projected-leads" class="font-lexend text-2xl font-bold text-blue-600">41</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500">Citas Agendadas</p>
+                                <p id="projected-appointments" class="font-lexend text-2xl font-bold text-green-600">12</p>
+                            </div>
                         </div>
                     </div>
-                     <div class="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                        <div>
-                            <p class="text-sm text-slate-500">Usuarios con Apertura</p>
-                            <p id="projected-opens" class="font-lexend text-2xl font-bold text-slate-900">413</p>
+                    <!-- Real Visits Card -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="font-lexend text-xl font-bold text-slate-900 mb-4">Registro de Visitas Reales</h3>
+                        <p class="text-slate-600 text-sm mb-4">El equipo de ventas puede registrar aquí el número de visitas concretadas durante la campaña.</p>
+                        <div class="flex items-center gap-4">
+                            <input type="number" id="real-visits-input" min="0" placeholder="Número de visitas" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <button id="save-visits-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 whitespace-nowrap">Guardar Visitas</button>
                         </div>
-                        <div>
-                            <p class="text-sm text-slate-500">Leads (Clics)</p>
-                            <p id="projected-leads" class="font-lexend text-2xl font-bold text-blue-600">41</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500">Citas Agendadas</p>
-                            <p id="projected-appointments" class="font-lexend text-2xl font-bold text-green-600">12</p>
+                        <div class="mt-4 pt-4 border-t border-slate-200 text-center">
+                            <p class="text-sm text-slate-500">Total de Visitas Registradas</p>
+                            <p id="saved-visits-display" class="font-lexend text-3xl font-bold text-slate-900">0</p>
                         </div>
                     </div>
                 </div>
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center sticky top-28">
                     <div class="chart-container">
                         <canvas id="projectionChart"></canvas>
                     </div>
@@ -588,7 +604,7 @@
             document.getElementById('emails-content').classList.remove('hidden');
             updateEmailPreview('1');
 
-            // --- LÓGICA DE KPIS Y GRÁFICO (CORREGIDA) ---
+            // --- LÓGICA DE KPIS Y GRÁFICO ---
             const openRateSlider = document.getElementById('open-rate-slider');
             const ctrSlider = document.getElementById('ctr-slider');
             const leadConversionSlider = document.getElementById('lead-conversion-slider');
@@ -598,6 +614,9 @@
             const projectedOpens = document.getElementById('projected-opens');
             const projectedLeads = document.getElementById('projected-leads');
             const projectedAppointments = document.getElementById('projected-appointments');
+            const realVisitsInput = document.getElementById('real-visits-input');
+            const saveVisitsBtn = document.getElementById('save-visits-btn');
+            const savedVisitsDisplay = document.getElementById('saved-visits-display');
             const ctx = document.getElementById('projectionChart').getContext('2d');
             const projectionChart = new Chart(ctx, {
                 type: 'doughnut',
@@ -642,10 +661,30 @@
                 projectionChart.update();
             }
 
+            function loadRealVisits() {
+                const savedVisits = localStorage.getItem('campaign_real_visits');
+                if (savedVisits) {
+                    savedVisitsDisplay.textContent = savedVisits;
+                    realVisitsInput.value = savedVisits;
+                }
+            }
+
+            saveVisitsBtn.addEventListener('click', () => {
+                const visits = realVisitsInput.value;
+                if (visits && !isNaN(visits) && visits >= 0) {
+                    localStorage.setItem('campaign_real_visits', visits);
+                    savedVisitsDisplay.textContent = visits;
+                    showSaveNotification('¡Visitas guardadas!');
+                } else {
+                    alert('Por favor, ingrese un número válido de visitas.');
+                }
+            });
+
             openRateSlider.addEventListener('input', updateProjections);
             ctrSlider.addEventListener('input', updateProjections);
             leadConversionSlider.addEventListener('input', updateProjections);
             updateProjections();
+            loadRealVisits();
             
             // --- LÓGICA DE APROBACIÓN ---
             const approvalStatusContainer = document.getElementById('approval-status-container');
