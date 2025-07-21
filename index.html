@@ -9,7 +9,7 @@
          - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
          - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
          - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (Firestore) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo colaborativo completo donde los cambios se guardan en la nube.
-         - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de dona con controles deslizantes y un nuevo módulo para registrar visitas reales (guardado en Firestore) -> Interacción: Ajustar proyecciones e ingresar datos reales -> Justificación: Cierra el ciclo de análisis permitiendo comparar las proyecciones con los resultados de ventas reales en tiempo real.
+         - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de barras comparativo (Proyectado vs. Real), controles deslizantes para metas y campos de entrada para resultados reales (todo guardado en Firestore) -> Interacción: Ajustar metas e ingresar datos reales -> Justificación: Se crea un ciclo completo de planificación y seguimiento, comparando expectativas con la realidad en tiempo real.
          - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (guardado en Firestore) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: El proceso de aprobación es ahora colaborativo y persistente en la nube.
          - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
@@ -29,7 +29,7 @@
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 400px;
+            max-width: 600px; /* Wider for bar chart */
             height: auto;
             margin: auto;
         }
@@ -73,7 +73,7 @@
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
-            z-index: 100;
+            z-index: 1000;
             opacity: 0;
             transition: opacity 0.5s, transform 0.5s;
             visibility: hidden;
@@ -97,7 +97,7 @@
                     <a href="#objetivo" class="nav-link hover:text-blue-600 transition-colors">Estrategia</a>
                     <a href="#ejecucion" class="nav-link hover:text-blue-600 transition-colors">Ejecución</a>
                     <a href="#recursos" class="nav-link hover:text-blue-600 transition-colors">Recursos</a>
-                    <a href="#kpis" class="nav-link hover:text-blue-600 transition-colors">KPIs y Proyecciones</a>
+                    <a href="#kpis" class="nav-link hover:text-blue-600 transition-colors">Resultados</a>
                     <a href="#aprobacion" class="nav-link hover:text-blue-600 transition-colors">Aprobación</a>
                 </div>
             </div>
@@ -177,7 +177,7 @@
         <section id="recursos" class="mb-20">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-900 mb-3">Recursos de la Campaña (Editable)</h2>
-                <p class="text-slate-600 max-w-2xl mx-auto">Previsualice y edite los activos creativos que se enviarán en cada canal. Los cambios se guardarán en su navegador.</p>
+                <p class="text-slate-600 max-w-2xl mx-auto">Previsualice y edite los activos creativos que se enviarán en cada canal. Los cambios se guardarán en la nube.</p>
             </div>
             <div class="bg-white rounded-xl shadow-lg border border-slate-200 p-4 sm:p-6">
                 <!-- Tabs -->
@@ -271,22 +271,23 @@
             </div>
         </section>
 
-        <!-- SECCIÓN 4: KPIS Y PROYECCIONES -->
+        <!-- SECCIÓN 4: RESULTADOS DE LA CAMPAÑA -->
         <section id="kpis" class="mb-20">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-900 mb-3">KPIs y Proyecciones Interactivas</h2>
-                <p class="text-slate-600 max-w-2xl mx-auto">Visualice el impacto potencial y registre los resultados reales de la campaña.</p>
+                <h2 class="text-3xl font-bold text-slate-900 mb-3">Resultados de la Campaña</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Defina sus metas, registre los resultados reales y compare el rendimiento de la campaña en tiempo real.</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <!-- Columna de Datos (Metas y Reales) -->
                 <div class="flex flex-col gap-8">
-                    <!-- Projections Card -->
-                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                        <h3 class="font-lexend text-xl font-bold text-slate-900 mb-6">Proyecciones de Conversión</h3>
-                        <div class="space-y-6">
+                    <!-- Metas y Proyecciones Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="font-lexend text-xl font-bold text-slate-900 mb-6">Metas y Proyecciones</h3>
+                        <div class="space-y-5">
                             <div>
                                 <label for="open-rate-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Apertura de Correo (<span id="open-rate-value">25</span>%)</label>
-                                <input id="open-rate-slider" type="range" min="10" max="50" value="25" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                <input id="open-rate-slider" type="range" min="1" max="50" value="25" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                             </div>
                             <div>
                                 <label for="ctr-slider" class="block text-sm font-medium text-slate-700 mb-1">Tasa de Clics (CTR) (<span id="ctr-value">10</span>%)</label>
@@ -294,43 +295,51 @@
                             </div>
                             <div>
                                 <label for="lead-conversion-slider" class="block text-sm font-medium text-slate-700 mb-1">Conversión a Cita (<span id="lead-conversion-value">30</span>%)</label>
-                                <input id="lead-conversion-slider" type="range" min="10" max="60" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                                <input id="lead-conversion-slider" type="range" min="1" max="60" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                             </div>
                         </div>
-                         <div class="mt-8 pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                         <div class="mt-6 pt-5 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                             <div>
-                                <p class="text-sm text-slate-500">Usuarios con Apertura</p>
+                                <p class="text-sm text-slate-500">Aperturas Proy.</p>
                                 <p id="projected-opens" class="font-lexend text-2xl font-bold text-slate-900">413</p>
                             </div>
                             <div>
-                                <p class="text-sm text-slate-500">Leads (Clics)</p>
+                                <p class="text-sm text-slate-500">Clics Proy.</p>
                                 <p id="projected-leads" class="font-lexend text-2xl font-bold text-blue-600">41</p>
                             </div>
                             <div>
-                                <p class="text-sm text-slate-500">Citas Agendadas</p>
+                                <p class="text-sm text-slate-500">Citas Proy.</p>
                                 <p id="projected-appointments" class="font-lexend text-2xl font-bold text-green-600">12</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Real Visits Card -->
-                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                        <h3 class="font-lexend text-xl font-bold text-slate-900 mb-4">Registro de Visitas Reales</h3>
-                        <p class="text-slate-600 text-sm mb-4">El equipo de ventas puede registrar aquí el número de visitas concretadas durante la campaña.</p>
-                        <div class="flex items-center gap-4">
-                            <input type="number" id="real-visits-input" min="0" placeholder="Número de visitas" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <button id="save-visits-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 whitespace-nowrap">Guardar Visitas</button>
+                    <!-- Resultados Reales Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <h3 class="font-lexend text-xl font-bold text-slate-900 mb-6">Resultados Reales de la Campaña</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="real-opens-input" class="block text-sm font-medium text-slate-700">Correos con Apertura (Real)</label>
+                                <input type="number" id="real-opens-input" min="0" placeholder="Ej: 350" class="mt-1 w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="real-clicks-input" class="block text-sm font-medium text-slate-700">Leads / Clics (Real)</label>
+                                <input type="number" id="real-clicks-input" min="0" placeholder="Ej: 35" class="mt-1 w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="real-appointments-input" class="block text-sm font-medium text-slate-700">Citas Agendadas (Real)</label>
+                                <input type="number" id="real-appointments-input" min="0" placeholder="Ej: 10" class="mt-1 w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-slate-200 text-center">
-                            <p class="text-sm text-slate-500">Total de Visitas Registradas</p>
-                            <p id="saved-visits-display" class="font-lexend text-3xl font-bold text-slate-900">0</p>
+                        <div class="mt-6 text-right">
+                            <button id="save-real-results-btn" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 whitespace-nowrap">Guardar Resultados</button>
                         </div>
                     </div>
                 </div>
+                <!-- Columna del Gráfico -->
                 <div class="flex flex-col items-center sticky top-28">
-                    <div class="chart-container">
-                        <canvas id="projectionChart"></canvas>
+                    <div class="chart-container w-full h-full bg-white p-4 rounded-xl shadow-lg border border-slate-200">
+                        <canvas id="comparisonChart"></canvas>
                     </div>
-                    <p class="text-sm text-slate-500 mt-4 text-center">Desglose del Funnel de Proyección</p>
                 </div>
             </div>
         </section>
@@ -393,6 +402,18 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmación Genérico -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+            <h3 id="confirm-modal-title" class="text-lg font-bold text-slate-900 mb-4">Confirmar Acción</h3>
+            <p id="confirm-modal-text" class="text-slate-600 mb-6">¿Está seguro?</p>
+            <div class="flex justify-end gap-4">
+                <button id="confirm-modal-cancel-btn" class="bg-slate-200 text-slate-800 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300">Cancelar</button>
+                <button id="confirm-modal-ok-btn" class="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         // Importar funciones de Firebase
@@ -401,40 +422,79 @@
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONFIGURACIÓN DE FIREBASE ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyCafKhBYlNFTZgTVPDNlv-y_aCgjVcOpyI",
-            authDomain: "salud-22f6d.firebaseapp.com",
-            projectId: "salud-22f6d",
-            storageBucket: "salud-22f6d.appspot.com",
-            messagingSenderId: "496474390081",
-            appId: "1:496474390081:web:bf42fe36e0c930a9b590c0",
-            measurementId: "G-8L3BSJN4MC"
-        };
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyCafKhBYlNFTZgTVPDNlv-y_aCgjVcOpyI",
+                authDomain: "salud-22f6d.firebaseapp.com",
+                projectId: "salud-22f6d",
+                storageBucket: "salud-22f6d.appspot.com",
+                messagingSenderId: "496474390081",
+                appId: "1:496474390081:web:bf42fe36e0c930a9b590c0",
+                measurementId: "G-8L3BSJN4MC"
+            };
 
-        const appId = "campaign-dashboard-app"; // You can keep a static App ID for your project
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'campaign-dashboard-app';
 
         // Inicializar Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
         
-        // Referencia al documento de la campaña en Firestore
         let campaignDocRef;
 
         document.addEventListener('DOMContentLoaded', () => {
             const totalDatabase = 1650;
 
-            // --- LÓGICA DE LA NOTIFICACIÓN DE GUARDADO ---
+            // --- LÓGICA DE NOTIFICACIONES Y MODALES ---
             const notification = document.getElementById('save-notification');
-            function showSaveNotification(message = '¡Guardado!') {
+            function showSaveNotification(message = '¡Guardado!', isError = false) {
                 notification.textContent = message;
+                notification.style.backgroundColor = isError ? '#dc2626' : '#16a34a';
                 notification.classList.add('show');
                 setTimeout(() => {
                     notification.classList.remove('show');
-                }, 2000); // La notificación desaparece después de 2 segundos
+                }, 3000);
             }
 
-            // --- LÓGICA DEL TIMELINE (SIN CAMBIOS) ---
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmModalTitle = document.getElementById('confirm-modal-title');
+            const confirmModalText = document.getElementById('confirm-modal-text');
+            const confirmModalCancelBtn = document.getElementById('confirm-modal-cancel-btn');
+            const confirmModalOkBtn = document.getElementById('confirm-modal-ok-btn');
+            let confirmCallback = null;
+
+            function showConfirm(title, text, onConfirm) {
+                confirmModalTitle.textContent = title;
+                confirmModalText.textContent = text;
+                confirmCallback = onConfirm;
+                confirmModal.classList.remove('hidden');
+                confirmModal.classList.add('flex');
+            }
+
+            confirmModalCancelBtn.addEventListener('click', () => {
+                confirmModal.classList.add('hidden');
+                confirmModal.classList.remove('flex');
+                confirmCallback = null;
+            });
+
+            confirmModalOkBtn.addEventListener('click', () => {
+                if (confirmCallback) {
+                    confirmCallback();
+                }
+                confirmModal.classList.add('hidden');
+                confirmModal.classList.remove('flex');
+                confirmCallback = null;
+            });
+            
+            confirmModal.addEventListener('click', (e) => {
+                if (e.target === confirmModal) {
+                    confirmModal.classList.add('hidden');
+                    confirmModal.classList.remove('flex');
+                }
+            });
+
+            // --- LÓGICA DEL TIMELINE ---
             const timelineDots = document.querySelectorAll('.timeline-dot');
             const detailTitle = document.getElementById('detail-title');
             const detailDay = document.getElementById('detail-day');
@@ -471,7 +531,7 @@
                 });
             });
 
-            // --- LÓGICA DE RECURSOS (MODIFICADA) ---
+            // --- LÓGICA DE RECURSOS ---
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabPanes = document.querySelectorAll('.tab-pane');
 
@@ -486,7 +546,6 @@
                 });
             });
 
-            // Lógica para Emails (Editor Visual con Carga/Descarga)
             const emailNavBtns = document.querySelectorAll('.email-nav-btn');
             const emailPreview = document.getElementById('email-preview');
             const saveEmailBtn = document.getElementById('save-email-btn');
@@ -496,9 +555,9 @@
             let currentEmailId = '1';
 
             const emailTemplates = {
-                '1': '1correo-salud-web.html',
-                '2': '2correo-salud-web.html',
-                '3': '3correo-salud-whatsapp.html'
+                '1': 'https://storage.googleapis.com/gemini-generative-ai-docs/1correo-salud-web.html',
+                '2': 'https://storage.googleapis.com/gemini-generative-ai-docs/2correo-salud-web.html',
+                '3': 'https://storage.googleapis.com/gemini-generative-ai-docs/3correo-salud-whatsapp.html'
             };
 
             async function updateEmailPreview(emailId, firestoreData) {
@@ -551,7 +610,7 @@
                     showSaveNotification('¡Cambios guardados en la nube!');
                 } catch (error) {
                     console.error("Error saving email to Firestore: ", error);
-                    alert("Error al guardar los cambios.");
+                    showSaveNotification("Error al guardar los cambios.", true);
                 }
             }
 
@@ -587,26 +646,22 @@
                             showSaveNotification('¡Plantilla cargada y guardada!');
                         } catch (error) {
                             console.error("Error uploading email to Firestore: ", error);
-                            alert("Error al subir la plantilla.");
+                            showSaveNotification("Error al subir la plantilla.", true);
                         }
                     };
                     reader.readAsText(file);
                 } else {
-                    alert('Por favor, seleccione un archivo HTML válido.');
+                    showSaveNotification('Por favor, seleccione un archivo HTML válido.', true);
                 }
                 event.target.value = '';
             });
 
             emailNavBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // We need to get the latest data to pass to updateEmailPreview
-                    onSnapshot(campaignDocRef, (doc) => {
-                         updateEmailPreview(btn.dataset.email, doc.data());
-                    });
+                btn.addEventListener('click', async () => {
+                     updateEmailPreview(btn.dataset.email, {});
                 });
             });
             
-            // Lógica para SMS
             const smsEditors = [document.getElementById('sms-1-editor'), document.getElementById('sms-2-editor'), document.getElementById('sms-3-editor')];
             const saveSmsBtn = document.getElementById('save-sms-btn');
 
@@ -622,12 +677,11 @@
                     showSaveNotification('¡Cambios de SMS guardados!');
                 } catch (error) {
                     console.error("Error saving SMS to Firestore: ", error);
-                    alert("Error al guardar los cambios de SMS.");
+                    showSaveNotification("Error al guardar los cambios de SMS.", true);
                 }
             }
             saveSmsBtn.addEventListener('click', saveSmsToFirestore);
 
-            // Lógica para WhatsApp
             const waEditors = [document.getElementById('wa-1-editor'), document.getElementById('wa-2-editor'), document.getElementById('wa-3-editor')];
             const saveWaBtn = document.getElementById('save-wa-btn');
             
@@ -643,12 +697,13 @@
                     showSaveNotification('¡Cambios de WhatsApp guardados!');
                 } catch (error) {
                     console.error("Error saving WhatsApp to Firestore: ", error);
-                    alert("Error al guardar los cambios de WhatsApp.");
+                    showSaveNotification("Error al guardar los cambios de WhatsApp.", true);
                 }
             }
             saveWaBtn.addEventListener('click', saveWaToFirestore);
 
             // --- LÓGICA DE KPIS Y GRÁFICO ---
+            // Elementos de Proyecciones
             const openRateSlider = document.getElementById('open-rate-slider');
             const ctrSlider = document.getElementById('ctr-slider');
             const leadConversionSlider = document.getElementById('lead-conversion-slider');
@@ -658,34 +713,90 @@
             const projectedOpens = document.getElementById('projected-opens');
             const projectedLeads = document.getElementById('projected-leads');
             const projectedAppointments = document.getElementById('projected-appointments');
-            const realVisitsInput = document.getElementById('real-visits-input');
-            const saveVisitsBtn = document.getElementById('save-visits-btn');
-            const savedVisitsDisplay = document.getElementById('saved-visits-display');
-            const ctx = document.getElementById('projectionChart').getContext('2d');
-            const projectionChart = new Chart(ctx, {
-                type: 'doughnut',
+
+            // Elementos de Resultados Reales
+            const realOpensInput = document.getElementById('real-opens-input');
+            const realClicksInput = document.getElementById('real-clicks-input');
+            const realAppointmentsInput = document.getElementById('real-appointments-input');
+            const saveRealResultsBtn = document.getElementById('save-real-results-btn');
+
+            // Gráfico
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            const comparisonChart = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: ['No Abrieron', 'Abrieron (Sin Clic)', 'Clics (Sin Cita)', 'Citas Agendadas'],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: ['#e2e8f0', '#94a3b8', '#60a5fa', '#16a34a'],
-                        borderColor: '#f8fafc',
-                        borderWidth: 4,
-                        hoverOffset: 8
-                    }]
+                    labels: ['Aperturas', 'Clics', 'Citas'],
+                    datasets: [
+                        {
+                            label: 'Proyectado',
+                            data: [0, 0, 0],
+                            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Real',
+                            data: [0, 0, 0],
+                            backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    cutout: '70%',
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#475569' // slate-600
+                            }
+                        },
+                        x: {
+                             ticks: {
+                                color: '#475569' // slate-600
+                            }
+                        }
+                    },
                     plugins: {
-                        legend: { position: 'bottom', labels: { padding: 20, boxWidth: 12, font: { size: 12 } } },
-                        tooltip: { callbacks: { label: (c) => `${c.label || ''}: ${c.parsed || ''}` } }
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#475569' // slate-600
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Rendimiento de la Campaña',
+                            color: '#1e293b' // slate-800
+                        }
                     }
                 }
             });
 
-            function updateProjections() {
+            function updateChart() {
+                // Datos Proyectados (de los sliders)
+                const openRate = parseInt(openRateSlider.value) / 100;
+                const ctr = parseInt(ctrSlider.value) / 100;
+                const leadConversion = parseInt(leadConversionSlider.value) / 100;
+                const projectedOpensNum = Math.round(totalDatabase * openRate);
+                const projectedLeadsNum = Math.round(projectedOpensNum * ctr);
+                const projectedAppointmentsNum = Math.round(projectedLeadsNum * leadConversion);
+
+                // Datos Reales (de los inputs)
+                const realOpensNum = Number(realOpensInput.value) || 0;
+                const realClicksNum = Number(realClicksInput.value) || 0;
+                const realAppointmentsNum = Number(realAppointmentsInput.value) || 0;
+
+                // Actualizar datasets del gráfico
+                comparisonChart.data.datasets[0].data = [projectedOpensNum, projectedLeadsNum, projectedAppointmentsNum];
+                comparisonChart.data.datasets[1].data = [realOpensNum, realClicksNum, realAppointmentsNum];
+                
+                comparisonChart.update();
+            }
+
+            function updateProjectionUI() {
                 const openRate = parseInt(openRateSlider.value) / 100;
                 const ctr = parseInt(ctrSlider.value) / 100;
                 const leadConversion = parseInt(leadConversionSlider.value) / 100;
@@ -698,34 +809,57 @@
                 projectedOpens.textContent = opens.toLocaleString();
                 projectedLeads.textContent = leads.toLocaleString();
                 projectedAppointments.textContent = appointments.toLocaleString();
-                const openedNoClick = opens - leads;
-                const noOpen = totalDatabase - opens;
-                const leadsNoAppointment = leads - appointments;
-                projectionChart.data.datasets[0].data = [noOpen, openedNoClick, leadsNoAppointment, appointments];
-                projectionChart.update();
+                
+                updateChart();
             }
 
-            async function saveRealVisitsToFirestore() {
+            async function saveProjectionsToFirestore() {
                 if (!campaignDocRef) return;
-                const visits = realVisitsInput.value;
-                if (visits && !isNaN(visits) && visits >= 0) {
-                     try {
-                        await setDoc(campaignDocRef, { kpis: { real_visits: Number(visits) } }, { merge: true });
-                        showSaveNotification('¡Visitas guardadas!');
-                    } catch (error) {
-                        console.error("Error saving visits to Firestore: ", error);
-                        alert("Error al guardar las visitas.");
-                    }
-                } else {
-                    alert('Por favor, ingrese un número válido de visitas.');
+                try {
+                    await setDoc(campaignDocRef, {
+                        kpis: {
+                            projections: {
+                                open_rate: openRateSlider.value,
+                                ctr: ctrSlider.value,
+                                lead_conversion: leadConversionSlider.value
+                            }
+                        }
+                    }, { merge: true });
+                } catch (error) {
+                    console.error("Error saving projections to Firestore: ", error);
+                    showSaveNotification("Error al guardar proyecciones.", true);
                 }
             }
 
-            saveVisitsBtn.addEventListener('click', saveRealVisitsToFirestore);
-            openRateSlider.addEventListener('input', updateProjections);
-            ctrSlider.addEventListener('input', updateProjections);
-            leadConversionSlider.addEventListener('input', updateProjections);
-            updateProjections();
+            async function saveRealResultsToFirestore() {
+                if (!campaignDocRef) return;
+                const realData = {
+                    opens: Number(realOpensInput.value) || 0,
+                    clicks: Number(realClicksInput.value) || 0,
+                    appointments: Number(realAppointmentsInput.value) || 0,
+                };
+                try {
+                    await setDoc(campaignDocRef, { kpis: { real_results: realData } }, { merge: true });
+                    showSaveNotification('¡Resultados reales guardados!');
+                } catch (error) {
+                    console.error("Error saving real results to Firestore: ", error);
+                    showSaveNotification("Error al guardar los resultados.", true);
+                }
+            }
+            
+            // Event Listeners para Proyecciones
+            openRateSlider.addEventListener('input', updateProjectionUI);
+            ctrSlider.addEventListener('input', updateProjectionUI);
+            leadConversionSlider.addEventListener('input', updateProjectionUI);
+            openRateSlider.addEventListener('change', saveProjectionsToFirestore);
+            ctrSlider.addEventListener('change', saveProjectionsToFirestore);
+            leadConversionSlider.addEventListener('change', saveProjectionsToFirestore);
+
+            // Event Listeners para Resultados Reales
+            saveRealResultsBtn.addEventListener('click', saveRealResultsToFirestore);
+            realOpensInput.addEventListener('input', updateChart);
+            realClicksInput.addEventListener('input', updateChart);
+            realAppointmentsInput.addEventListener('input', updateChart);
             
             // --- LÓGICA DE APROBACIÓN ---
             const approvalStatusContainer = document.getElementById('approval-status-container');
@@ -733,7 +867,6 @@
             const approveBtn = document.getElementById('approve-btn');
             const requestChangesBtn = document.getElementById('request-changes-btn');
             const rejectBtn = document.getElementById('reject-btn');
-            
             const feedbackModal = document.getElementById('feedback-modal');
             const feedbackModalTitle = document.getElementById('feedback-modal-title');
             const feedbackComments = document.getElementById('feedback-comments');
@@ -770,14 +903,15 @@
                 }
                 approvalStatusContainer.innerHTML = statusHTML;
                 
-                document.getElementById('reset-approval-btn').addEventListener('click', async () => {
-                    if (confirm('¿Está seguro de que desea cambiar su decisión? El estado actual se borrará.')) {
+                document.getElementById('reset-approval-btn').addEventListener('click', () => {
+                    showConfirm('Cambiar Decisión', '¿Está seguro de que desea cambiar su decisión? El estado actual se borrará.', async () => {
                         try {
                             await setDoc(campaignDocRef, { approval: {} }, { merge: true });
                         } catch (error) {
                             console.error("Error resetting approval: ", error);
+                            showSaveNotification("Error al cambiar la decisión.", true);
                         }
-                    }
+                    });
                 });
             }
 
@@ -791,13 +925,14 @@
                     await setDoc(campaignDocRef, { approval: approvalData }, { merge: true });
                 } catch (error) {
                     console.error("Error saving approval status: ", error);
+                    showSaveNotification("Error al guardar la aprobación.", true);
                 }
             }
 
             approveBtn.addEventListener('click', () => {
-                if (confirm('¿Está seguro de que desea aprobar esta campaña?')) {
+                showConfirm('Aprobar Campaña', '¿Está seguro de que desea aprobar esta campaña?', () => {
                     saveApprovalStatus('Aprobado', '');
-                }
+                });
             });
 
             requestChangesBtn.addEventListener('click', () => {
@@ -837,11 +972,11 @@
                     feedbackModal.classList.add('hidden');
                     feedbackModal.classList.remove('flex');
                 } else {
-                    alert('Por favor, ingrese sus comentarios.');
+                    showSaveNotification('Por favor, ingrese sus comentarios.', true);
                 }
             });
 
-            // --- LÓGICA DE NAVEGACIÓN ACTIVA (SIN CAMBIOS) ---
+            // --- LÓGICA DE NAVEGACIÓN ACTIVA ---
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
             window.addEventListener('scroll', () => {
@@ -864,32 +999,34 @@
             function loadAllDataFromFirestore(doc) {
                 const data = doc.exists() ? doc.data() : {};
 
-                // Cargar Emails
+                // Cargar Emails, SMS, WhatsApp
                 updateEmailPreview(currentEmailId, data);
-                
-                // Cargar SMS
                 if (data.sms) {
                     smsEditors[0].value = data.sms.sms_1_content || '';
                     smsEditors[1].value = data.sms.sms_2_content || '';
                     smsEditors[2].value = data.sms.sms_3_content || '';
                 }
-
-                // Cargar WhatsApp
                 if (data.whatsapp) {
                     waEditors[0].value = data.whatsapp.wa_1_content || '';
                     waEditors[1].value = data.whatsapp.wa_2_content || '';
                     waEditors[2].value = data.whatsapp.wa_3_content || '';
                 }
 
-                // Cargar Visitas Reales
-                if (data.kpis && data.kpis.real_visits) {
-                    const savedVisits = data.kpis.real_visits;
-                    savedVisitsDisplay.textContent = savedVisits;
-                    realVisitsInput.value = savedVisits;
-                } else {
-                    savedVisitsDisplay.textContent = '0';
-                    realVisitsInput.value = '';
+                // Cargar KPIs
+                if (data.kpis) {
+                    if (data.kpis.projections) {
+                        openRateSlider.value = data.kpis.projections.open_rate || 25;
+                        ctrSlider.value = data.kpis.projections.ctr || 10;
+                        leadConversionSlider.value = data.kpis.projections.lead_conversion || 30;
+                    }
+                    if (data.kpis.real_results) {
+                        realOpensInput.value = data.kpis.real_results.opens || '';
+                        realClicksInput.value = data.kpis.real_results.clicks || '';
+                        realAppointmentsInput.value = data.kpis.real_results.appointments || '';
+                    }
                 }
+                
+                updateProjectionUI(); // Esto actualiza los textos de proyección y llama a updateChart()
 
                 // Cargar Estado de Aprobación
                 setApprovalState(data.approval);
@@ -898,22 +1035,20 @@
             // --- INICIALIZACIÓN DE AUTENTICACIÓN Y DATOS ---
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // El usuario está autenticado
                     campaignDocRef = doc(db, "artifacts", appId, "public/data/campaigns", "main_campaign");
-                    
-                    // Escuchar cambios en tiempo real
                     onSnapshot(campaignDocRef, (doc) => {
-                        console.log("Datos recibidos de Firestore: ", doc.data());
                         loadAllDataFromFirestore(doc);
                     });
-
                 } else {
-                    // El usuario no está autenticado, intentar iniciar sesión
                     try {
-                       await signInAnonymously(auth);
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
                     } catch (error) {
                         console.error("Error de autenticación:", error);
-                        alert("No se pudo conectar con el servicio. Por favor, recargue la página.");
+                        showSaveNotification("No se pudo conectar con el servicio. Por favor, recargue la página.", true);
                     }
                 }
             });
