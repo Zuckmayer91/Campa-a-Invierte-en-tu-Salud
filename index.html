@@ -8,9 +8,9 @@
     <!-- Visualization & Content Choices: 
          - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
          - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
-         - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (localStorage) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo completo que permite al gerente usar plantillas externas, editarlas visualmente y exportar el resultado.
-         - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de dona con controles deslizantes y un nuevo módulo para registrar visitas reales (guardado en localStorage) -> Interacción: Ajustar proyecciones e ingresar datos reales -> Justificación: Se cierra el ciclo de análisis permitiendo comparar las proyecciones con los resultados de ventas reales, haciendo del tablero una herramienta de seguimiento completa.
-         - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (HTML/CSS/JS) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: Se añade flexibilidad al proceso de aprobación, permitiendo al gerente revertir una decisión, lo que refleja un flujo de trabajo más realista.
+         - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (Firestore) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo colaborativo completo donde los cambios se guardan en la nube.
+         - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de dona con controles deslizantes y un nuevo módulo para registrar visitas reales (guardado en Firestore) -> Interacción: Ajustar proyecciones e ingresar datos reales -> Justificación: Cierra el ciclo de análisis permitiendo comparar las proyecciones con los resultados de ventas reales en tiempo real.
+         - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (guardado en Firestore) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: El proceso de aprobación es ahora colaborativo y persistente en la nube.
          - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -394,7 +394,33 @@
     </div>
 
 
-    <script>
+    <script type="module">
+        // Importar funciones de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- CONFIGURACIÓN DE FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCafKhBYlNFTZgTVPDNlv-y_aCgjVcOpyI",
+            authDomain: "salud-22f6d.firebaseapp.com",
+            projectId: "salud-22f6d",
+            storageBucket: "salud-22f6d.appspot.com",
+            messagingSenderId: "496474390081",
+            appId: "1:496474390081:web:bf42fe36e0c930a9b590c0",
+            measurementId: "G-8L3BSJN4MC"
+        };
+
+        const appId = "campaign-dashboard-app"; // You can keep a static App ID for your project
+
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // Referencia al documento de la campaña en Firestore
+        let campaignDocRef;
+
         document.addEventListener('DOMContentLoaded', () => {
             const totalDatabase = 1650;
 
@@ -475,10 +501,10 @@
                 '3': '3correo-salud-whatsapp.html'
             };
 
-            async function updateEmailPreview(emailId) {
+            async function updateEmailPreview(emailId, firestoreData) {
                 currentEmailId = emailId;
-                const storageKey = `email_content_${emailId}`;
-                const savedContent = localStorage.getItem(storageKey);
+                const fieldName = `email_${emailId}_content`;
+                const savedContent = firestoreData && firestoreData.emails ? firestoreData.emails[fieldName] : null;
 
                 let content = '';
                 if (savedContent) {
@@ -516,12 +542,20 @@
                 });
             }
 
-            saveEmailBtn.addEventListener('click', () => {
-                const storageKey = `email_content_${currentEmailId}`;
+            async function saveEmailContentToFirestore() {
+                if (!campaignDocRef) return;
+                const fieldName = `emails.email_${currentEmailId}_content`;
                 const newContent = emailPreview.contentDocument.documentElement.outerHTML;
-                localStorage.setItem(storageKey, newContent);
-                showSaveNotification('¡Cambios guardados!');
-            });
+                try {
+                    await setDoc(campaignDocRef, { emails: { [fieldName.split('.')[1]]: newContent } }, { merge: true });
+                    showSaveNotification('¡Cambios guardados en la nube!');
+                } catch (error) {
+                    console.error("Error saving email to Firestore: ", error);
+                    alert("Error al guardar los cambios.");
+                }
+            }
+
+            saveEmailBtn.addEventListener('click', saveEmailContentToFirestore);
             
             downloadEmailBtn.addEventListener('click', () => {
                 const content = emailPreview.contentDocument.documentElement.outerHTML;
@@ -544,12 +578,17 @@
                 const file = event.target.files[0];
                 if (file && file.type === 'text/html') {
                     const reader = new FileReader();
-                    reader.onload = (e) => {
+                    reader.onload = async (e) => {
                         const content = e.target.result;
                         emailPreview.srcdoc = content;
-                        const storageKey = `email_content_${currentEmailId}`;
-                        localStorage.setItem(storageKey, content);
-                        showSaveNotification('¡Plantilla cargada!');
+                        const fieldName = `emails.email_${currentEmailId}_content`;
+                        try {
+                            await setDoc(campaignDocRef, { emails: { [fieldName.split('.')[1]]: content } }, { merge: true });
+                            showSaveNotification('¡Plantilla cargada y guardada!');
+                        } catch (error) {
+                            console.error("Error uploading email to Firestore: ", error);
+                            alert("Error al subir la plantilla.");
+                        }
                     };
                     reader.readAsText(file);
                 } else {
@@ -559,50 +598,55 @@
             });
 
             emailNavBtns.forEach(btn => {
-                btn.addEventListener('click', () => updateEmailPreview(btn.dataset.email));
+                btn.addEventListener('click', () => {
+                    // We need to get the latest data to pass to updateEmailPreview
+                    onSnapshot(campaignDocRef, (doc) => {
+                         updateEmailPreview(btn.dataset.email, doc.data());
+                    });
+                });
             });
             
             // Lógica para SMS
             const smsEditors = [document.getElementById('sms-1-editor'), document.getElementById('sms-2-editor'), document.getElementById('sms-3-editor')];
             const saveSmsBtn = document.getElementById('save-sms-btn');
 
-            smsEditors.forEach((editor, index) => {
-                const storageKey = `sms_content_${index + 1}`;
-                const savedContent = localStorage.getItem(storageKey);
-                if (savedContent) {
-                    editor.value = savedContent;
+            async function saveSmsToFirestore() {
+                if (!campaignDocRef) return;
+                const smsData = {
+                    sms_1_content: smsEditors[0].value,
+                    sms_2_content: smsEditors[1].value,
+                    sms_3_content: smsEditors[2].value,
+                };
+                try {
+                    await setDoc(campaignDocRef, { sms: smsData }, { merge: true });
+                    showSaveNotification('¡Cambios de SMS guardados!');
+                } catch (error) {
+                    console.error("Error saving SMS to Firestore: ", error);
+                    alert("Error al guardar los cambios de SMS.");
                 }
-            });
-
-            saveSmsBtn.addEventListener('click', () => {
-                smsEditors.forEach((editor, index) => {
-                    localStorage.setItem(`sms_content_${index + 1}`, editor.value);
-                });
-                showSaveNotification('¡Cambios de SMS guardados!');
-            });
+            }
+            saveSmsBtn.addEventListener('click', saveSmsToFirestore);
 
             // Lógica para WhatsApp
             const waEditors = [document.getElementById('wa-1-editor'), document.getElementById('wa-2-editor'), document.getElementById('wa-3-editor')];
             const saveWaBtn = document.getElementById('save-wa-btn');
-
-            waEditors.forEach((editor, index) => {
-                const storageKey = `wa_content_${index + 1}`;
-                const savedContent = localStorage.getItem(storageKey);
-                if (savedContent) {
-                    editor.value = savedContent;
+            
+            async function saveWaToFirestore() {
+                if (!campaignDocRef) return;
+                const waData = {
+                    wa_1_content: waEditors[0].value,
+                    wa_2_content: waEditors[1].value,
+                    wa_3_content: waEditors[2].value,
+                };
+                try {
+                    await setDoc(campaignDocRef, { whatsapp: waData }, { merge: true });
+                    showSaveNotification('¡Cambios de WhatsApp guardados!');
+                } catch (error) {
+                    console.error("Error saving WhatsApp to Firestore: ", error);
+                    alert("Error al guardar los cambios de WhatsApp.");
                 }
-            });
-
-            saveWaBtn.addEventListener('click', () => {
-                waEditors.forEach((editor, index) => {
-                    localStorage.setItem(`wa_content_${index + 1}`, editor.value);
-                });
-                showSaveNotification('¡Cambios de WhatsApp guardados!');
-            });
-
-            // Inicializar primera vista
-            document.getElementById('emails-content').classList.remove('hidden');
-            updateEmailPreview('1');
+            }
+            saveWaBtn.addEventListener('click', saveWaToFirestore);
 
             // --- LÓGICA DE KPIS Y GRÁFICO ---
             const openRateSlider = document.getElementById('open-rate-slider');
@@ -661,30 +705,27 @@
                 projectionChart.update();
             }
 
-            function loadRealVisits() {
-                const savedVisits = localStorage.getItem('campaign_real_visits');
-                if (savedVisits) {
-                    savedVisitsDisplay.textContent = savedVisits;
-                    realVisitsInput.value = savedVisits;
-                }
-            }
-
-            saveVisitsBtn.addEventListener('click', () => {
+            async function saveRealVisitsToFirestore() {
+                if (!campaignDocRef) return;
                 const visits = realVisitsInput.value;
                 if (visits && !isNaN(visits) && visits >= 0) {
-                    localStorage.setItem('campaign_real_visits', visits);
-                    savedVisitsDisplay.textContent = visits;
-                    showSaveNotification('¡Visitas guardadas!');
+                     try {
+                        await setDoc(campaignDocRef, { kpis: { real_visits: Number(visits) } }, { merge: true });
+                        showSaveNotification('¡Visitas guardadas!');
+                    } catch (error) {
+                        console.error("Error saving visits to Firestore: ", error);
+                        alert("Error al guardar las visitas.");
+                    }
                 } else {
                     alert('Por favor, ingrese un número válido de visitas.');
                 }
-            });
+            }
 
+            saveVisitsBtn.addEventListener('click', saveRealVisitsToFirestore);
             openRateSlider.addEventListener('input', updateProjections);
             ctrSlider.addEventListener('input', updateProjections);
             leadConversionSlider.addEventListener('input', updateProjections);
             updateProjections();
-            loadRealVisits();
             
             // --- LÓGICA DE APROBACIÓN ---
             const approvalStatusContainer = document.getElementById('approval-status-container');
@@ -700,7 +741,14 @@
             const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
             let currentDecision = '';
 
-            function setApprovalState(status, date, comments) {
+            function setApprovalState(approvalData) {
+                if (!approvalData || !approvalData.status) {
+                    approvalStatusContainer.classList.add('hidden');
+                    approvalPendingContainer.classList.remove('hidden');
+                    return;
+                }
+
+                const { status, date, comments } = approvalData;
                 approvalPendingContainer.classList.add('hidden');
                 approvalStatusContainer.classList.remove('hidden');
 
@@ -711,75 +759,39 @@
 
                 switch(status) {
                     case 'Aprobado':
-                        statusHTML = `
-                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r-lg" role="alert">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-lg">Campaña Aprobada</p>
-                                        <p class="text-sm">Decisión tomada el: ${formattedDate}</p>
-                                    </div>
-                                    ${resetBtnHTML}
-                                </div>
-                            </div>`;
+                        statusHTML = `<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r-lg" role="alert"><div class="flex justify-between items-center"><div><p class="font-bold text-lg">Campaña Aprobada</p><p class="text-sm">Decisión tomada el: ${formattedDate}</p></div>${resetBtnHTML}</div></div>`;
                         break;
                     case 'Cambios Solicitados':
-                         statusHTML = `
-                            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg" role="alert">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-bold text-lg">Se Solicitaron Cambios</p>
-                                        <p class="text-sm">Decisión tomada el: ${formattedDate}</p>
-                                        <p class="mt-2 text-sm italic"><strong>Comentarios:</strong> "${comments}"</p>
-                                    </div>
-                                    ${resetBtnHTML}
-                                </div>
-                            </div>`;
+                         statusHTML = `<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg" role="alert"><div class="flex justify-between items-start"><div><p class="font-bold text-lg">Se Solicitaron Cambios</p><p class="text-sm">Decisión tomada el: ${formattedDate}</p><p class="mt-2 text-sm italic"><strong>Comentarios:</strong> "${comments}"</p></div>${resetBtnHTML}</div></div>`;
                         break;
                     case 'Rechazado':
-                        statusHTML = `
-                            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg" role="alert">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-bold text-lg">Campaña Rechazada</p>
-                                        <p class="text-sm">Decisión tomada el: ${formattedDate}</p>
-                                        <p class="mt-2 text-sm italic"><strong>Justificación:</strong> "${comments}"</p>
-                                    </div>
-                                    ${resetBtnHTML}
-                                </div>
-                            </div>`;
+                        statusHTML = `<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg" role="alert"><div class="flex justify-between items-start"><div><p class="font-bold text-lg">Campaña Rechazada</p><p class="text-sm">Decisión tomada el: ${formattedDate}</p><p class="mt-2 text-sm italic"><strong>Justificación:</strong> "${comments}"</p></div>${resetBtnHTML}</div></div>`;
                         break;
                 }
                 approvalStatusContainer.innerHTML = statusHTML;
                 
-                // Add event listener to the newly created button
-                document.getElementById('reset-approval-btn').addEventListener('click', () => {
+                document.getElementById('reset-approval-btn').addEventListener('click', async () => {
                     if (confirm('¿Está seguro de que desea cambiar su decisión? El estado actual se borrará.')) {
-                        localStorage.removeItem('campaign_approval_status');
-                        localStorage.removeItem('campaign_approval_date');
-                        localStorage.removeItem('campaign_approval_comments');
-                        
-                        approvalStatusContainer.classList.add('hidden');
-                        approvalPendingContainer.classList.remove('hidden');
+                        try {
+                            await setDoc(campaignDocRef, { approval: {} }, { merge: true });
+                        } catch (error) {
+                            console.error("Error resetting approval: ", error);
+                        }
                     }
                 });
             }
 
-            function loadApprovalStatus() {
-                const status = localStorage.getItem('campaign_approval_status');
-                const date = localStorage.getItem('campaign_approval_date');
-                const comments = localStorage.getItem('campaign_approval_comments');
-
-                if (status && date) {
-                    setApprovalState(status, date, comments);
+            async function saveApprovalStatus(status, comments) {
+                const approvalData = {
+                    status: status,
+                    comments: comments,
+                    date: new Date().toISOString()
+                };
+                try {
+                    await setDoc(campaignDocRef, { approval: approvalData }, { merge: true });
+                } catch (error) {
+                    console.error("Error saving approval status: ", error);
                 }
-            }
-
-            function saveApprovalStatus(status, comments) {
-                const date = new Date().toISOString();
-                localStorage.setItem('campaign_approval_status', status);
-                localStorage.setItem('campaign_approval_date', date);
-                localStorage.setItem('campaign_approval_comments', comments);
-                setApprovalState(status, date, comments);
             }
 
             approveBtn.addEventListener('click', () => {
@@ -829,9 +841,6 @@
                 }
             });
 
-            // Cargar estado al iniciar
-            loadApprovalStatus();
-
             // --- LÓGICA DE NAVEGACIÓN ACTIVA (SIN CAMBIOS) ---
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
@@ -849,6 +858,64 @@
                         link.classList.add('active');
                     }
                 });
+            });
+
+            // --- FUNCIÓN PRINCIPAL DE CARGA DE DATOS DESDE FIRESTORE ---
+            function loadAllDataFromFirestore(doc) {
+                const data = doc.exists() ? doc.data() : {};
+
+                // Cargar Emails
+                updateEmailPreview(currentEmailId, data);
+                
+                // Cargar SMS
+                if (data.sms) {
+                    smsEditors[0].value = data.sms.sms_1_content || '';
+                    smsEditors[1].value = data.sms.sms_2_content || '';
+                    smsEditors[2].value = data.sms.sms_3_content || '';
+                }
+
+                // Cargar WhatsApp
+                if (data.whatsapp) {
+                    waEditors[0].value = data.whatsapp.wa_1_content || '';
+                    waEditors[1].value = data.whatsapp.wa_2_content || '';
+                    waEditors[2].value = data.whatsapp.wa_3_content || '';
+                }
+
+                // Cargar Visitas Reales
+                if (data.kpis && data.kpis.real_visits) {
+                    const savedVisits = data.kpis.real_visits;
+                    savedVisitsDisplay.textContent = savedVisits;
+                    realVisitsInput.value = savedVisits;
+                } else {
+                    savedVisitsDisplay.textContent = '0';
+                    realVisitsInput.value = '';
+                }
+
+                // Cargar Estado de Aprobación
+                setApprovalState(data.approval);
+            }
+
+            // --- INICIALIZACIÓN DE AUTENTICACIÓN Y DATOS ---
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // El usuario está autenticado
+                    campaignDocRef = doc(db, "artifacts", appId, "public/data/campaigns", "main_campaign");
+                    
+                    // Escuchar cambios en tiempo real
+                    onSnapshot(campaignDocRef, (doc) => {
+                        console.log("Datos recibidos de Firestore: ", doc.data());
+                        loadAllDataFromFirestore(doc);
+                    });
+
+                } else {
+                    // El usuario no está autenticado, intentar iniciar sesión
+                    try {
+                       await signInAnonymously(auth);
+                    } catch (error) {
+                        console.error("Error de autenticación:", error);
+                        alert("No se pudo conectar con el servicio. Por favor, recargue la página.");
+                    }
+                }
             });
         });
     </script>
