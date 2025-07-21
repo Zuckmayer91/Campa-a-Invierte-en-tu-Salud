@@ -8,7 +8,7 @@
     <!-- Visualization & Content Choices: 
         - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
         - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
-        - Recursos Creativos -> Organizar/Explorar -> Pestañas interactivas con previsualizaciones (HTML/CSS/JS) -> Interacción: Clic para cambiar de pestaña y ver los diferentes materiales -> Justificación: Centraliza todos los activos creativos (emails, SMS, WhatsApp) en un solo lugar para una revisión fácil y completa.
+        - Recursos Creativos -> Organizar/Explorar -> Pestañas interactivas con previsualizaciones (HTML/CSS/JS) -> Interacción: Clic para cambiar de pestaña y ver los diferentes materiales desde archivos externos -> Justificación: Centraliza todos los activos creativos de forma modular y organizada, simulando un entorno de desarrollo real.
         - KPIs y Proyecciones -> Comparar/Explorar -> Gráfico de dona con controles deslizantes (Chart.js/JS) -> Interacción: Deslizadores para ajustar proyecciones -> Justificación: Es el "factor sorpresa", permite al gerente realizar análisis "what-if" en tiempo real, lo que demuestra un dominio de los datos y aumenta la confianza en el plan.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
@@ -177,7 +177,7 @@
                                 </nav>
                             </div>
                             <div class="lg:w-3/4 bg-slate-100 rounded-lg p-2">
-                                <iframe id="email-preview" class="w-full h-96 rounded-md border-2 border-slate-200" srcdoc=""></iframe>
+                                <iframe id="email-preview" class="w-full h-96 rounded-md border-2 border-slate-200"></iframe>
                             </div>
                         </div>
                     </div>
@@ -400,31 +400,15 @@
             const emailPreview = document.getElementById('email-preview');
             
             const emailTemplates = {
-                '1': `
-                    <div style="font-family: sans-serif; padding: 20px; text-align: center; background-color: #f0fdf4;">
-                        <img src="https://ftyatux.stripocdn.email/content/guids/CABINET_bd1c711cfd2c7f0be157ee75471a970e17de5a755591d0c85c2d63fbbf9d96cf/images/chica_salud.png" alt="Imagen de salud" style="width:100%; max-width: 600px;">
-                        <h2 style="color: #14532d;">Invierte en tu Activo más Preciado: Tu Salud</h2>
-                        <p>Hola *|NOMBRE|*, en la búsqueda del éxito, a menudo sacrificamos nuestra paz. Te invitamos a considerar una inversión en ti.</p>
-                        <a href="https://www.aypch.com/" style="background-color: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Conoce Más Sobre Bienestar</a>
-                    </div>`,
-                '2': `
-                    <div style="font-family: sans-serif; padding: 20px; text-align: center; background-color: #eff6ff;">
-                         <img src="https://ftyatux.stripocdn.email/content/guids/CABINET_39e0f84f4f8b2b9ec7be86c3a8be9dec1bd7c04840e37cf10861a776dd82a39e/images/proyecto_nuevo_2.jpg" alt="Imagen de proyecto" style="width:100%; max-width: 600px;">
-                        <h2 style="color: #1e3a8a;">La Doble Ganancia: Bienestar y Patrimonio</h2>
-                        <p>Ayer hablamos de salud. Hoy te mostramos cómo esa inversión también es la más inteligente para tu futuro financiero. La tierra se valoriza.</p>
-                        <a href="https://aypch.com/lotes-campestres-valle-del-cauca/" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Explora los Proyectos</a>
-                    </div>`,
-                '3': `
-                    <div style="font-family: sans-serif; padding: 20px; text-align: center; background-color: #f0fdfa;">
-                        <img src="https://ftyatux.stripocdn.email/content/guids/CABINET_1f1e0e8937823fc0aca655a561bd3484c0a10edd21f9a2837d73c8c364030968/images/proyecto_nuevo_1.jpg" alt="Imagen de familia" style="width:100%; max-width: 600px;">
-                        <h2 style="color: #0f766e;">¿Listo para Conversar?</h2>
-                        <p>Has visto los beneficios para tu salud y tu patrimonio. El siguiente paso es una conversación sin compromiso para resolver tus dudas.</p>
-                        <a href="https://wa.link/xc6a7s" style="background-color: #0d9488; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Hablar con un Asesor por WhatsApp</a>
-                    </div>`
+                '1': '1correo-salud-web.html',
+                '2': '2correo-salud-web.html',
+                '3': '3correo-salud-whatsapp.html'
             };
             
             function updateEmailPreview(emailId) {
-                emailPreview.srcdoc = emailTemplates[emailId];
+                if (emailTemplates[emailId]) {
+                    emailPreview.src = emailTemplates[emailId];
+                }
                 emailNavBtns.forEach(btn => {
                     btn.classList.remove('active');
                     if (btn.dataset.email === emailId) {
