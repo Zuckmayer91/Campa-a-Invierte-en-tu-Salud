@@ -6,12 +6,12 @@
     <!-- Chosen Palette: Corporate Wellness -->
     <!-- Application Structure Plan: Se diseñó un tablero de control de una sola página con navegación fija. La estructura sigue un flujo lógico para un gerente: comienza con el objetivo principal (el QUÉ), explica la estrategia (el PORQUÉ), detalla el plan de ejecución interactivo (el CÓMO), muestra los recursos creativos (LOS ACTIVOS), visualiza los resultados esperados con un gráfico y controles deslizantes (el RESULTADO) y finaliza con la solicitud de aprobación (la ACCIÓN). Esta estructura facilita la comprensión rápida y la toma de decisiones al transformar un informe estático en una experiencia interactiva y digerible. -->
     <!-- Visualization & Content Choices: 
-         - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
-         - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
-         - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (Firestore) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo colaborativo completo donde los cambios se guardan en la nube.
-         - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de barras comparativo (Proyectado vs. Real), controles deslizantes para metas y campos de entrada para resultados reales (todo guardado en Firestore) -> Interacción: Ajustar metas e ingresar datos reales -> Justificación: Se crea un ciclo completo de planificación y seguimiento, comparando expectativas con la realidad en tiempo real.
-         - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (guardado en Firestore) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: El proceso de aprobación es ahora colaborativo y persistente en la nube.
-         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+            - Objetivo Estratégico -> Informar -> Tarjetas de métricas clave -> Interacción: Resaltado al pasar el ratón -> Justificación: Presenta los datos más importantes de inmediato.
+            - Plan de Ejecución -> Organizar/Explorar -> Línea de tiempo horizontal interactiva (HTML/CSS/JS) -> Interacción: Clic para mostrar detalles -> Justificación: Transforma una lista de tareas en un flujo de campaña claro y atractivo.
+            - Recursos Creativos -> Organizar/Explorar -> Pestañas con editor visual WYSIWYG para emails (contentEditable) y campos de texto para SMS/WA -> Interacción: Subir, editar, guardar (Firestore) y descargar el HTML modificado -> Justificación: Se crea un flujo de trabajo colaborativo completo donde los cambios se guardan en la nube.
+            - KPIs y Proyecciones -> Comparar/Explorar/Registrar -> Gráfico de barras comparativo (Proyectado vs. Real), controles deslizantes para metas y campos de entrada para resultados reales (todo guardado en Firestore) -> Interacción: Ajustar metas e ingresar datos reales -> Justificación: Se crea un ciclo completo de planificación y seguimiento, comparando expectativas con la realidad en tiempo real.
+            - Aprobación -> Decidir/Registrar -> Sistema de estado interactivo con modal para feedback y opción para revertir la decisión (guardado en Firestore) -> Interacción: Aprobar, rechazar o solicitar cambios, y luego poder cambiar la decisión -> Justificación: El proceso de aprobación es ahora colaborativo y persistente en la nube.
+            - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <title>Tablero de Control: Campaña "Invierte en tu Salud"</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -111,7 +111,8 @@
             <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Campaña "Invierte en tu Salud"</h1>
             <p class="text-lg text-slate-600 max-w-3xl mx-auto mb-10">Un plan para reactivar nuestra base de datos, enfocándonos en una propuesta de valor que resuena con las necesidades actuales: el bienestar como la mejor inversión.</p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <!-- CAMBIO: Se ajusta la grilla para 4 elementos y se añade la tarjeta de Landing Page -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
                     <h3 class="font-lexend text-slate-900 text-3xl font-bold">1,650</h3>
                     <p class="text-sm text-slate-500">Interesados en Base de Datos</p>
@@ -123,6 +124,14 @@
                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
                     <h3 class="font-lexend text-slate-900 text-3xl font-bold">3 Días</h3>
                     <p class="text-sm text-slate-500">Duración de la Campaña</p>
+                </div>
+                <!-- NUEVO: Tarjeta de Landing Page -->
+                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-200">
+                    <h3 class="font-lexend text-slate-900 text-xl font-bold mb-2">Landing Page</h3>
+                    <p class="text-sm text-slate-500 break-words">Todo el tráfico se dirigirá a:</p>
+                    <a href="https://aypch.com/lotes-campestres-valle-del-cauca/" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold hover:underline text-sm">
+                        ver página de destino
+                    </a>
                 </div>
             </div>
         </section>
@@ -233,15 +242,18 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-800 mb-2">SMS 1: Directo</h4>
-                                <textarea id="sms-1-editor" class="editable-textarea">Hola *|NOMBRE|*, invierte en tu activo más valioso: tu salud. Lotes campestres para una vida sin estrés. Conoce más aquí: https://www.aypch.com/</textarea>
+                                <!-- CAMBIO: URL actualizada -->
+                                <textarea id="sms-1-editor" class="editable-textarea">Hola *|NOMBRE|*, invierte en tu activo más valioso: tu salud. Lotes campestres para una vida sin estrés. Conoce más aquí: https://aypch.com/lotes-campestres-valle-del-cauca/</textarea>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-800 mb-2">SMS 2: Problema</h4>
-                                <textarea id="sms-2-editor" class="editable-textarea">¿Cansado del ruido y el afán? Tu bienestar es primero. Descubre tu refugio de paz en el Valle del Cauca. Info: https://www.aypch.com/</textarea>
+                                <!-- CAMBIO: URL actualizada -->
+                                <textarea id="sms-2-editor" class="editable-textarea">¿Cansado del ruido y el afán? Tu bienestar es primero. Descubre tu refugio de paz en el Valle del Cauca. Info: https://aypch.com/lotes-campestres-valle-del-cauca/</textarea>
                             </div>
                             <div class="bg-slate-50 p-4 rounded-lg">
                                 <h4 class="font-bold text-slate-800 mb-2">SMS 3: Beneficio</h4>
-                                <textarea id="sms-3-editor" class="editable-textarea">Respira aire puro, vive tranquilo. Elige un futuro más saludable para ti y tu familia. Explora nuestros proyectos: https://www.aypch.com/</textarea>
+                                <!-- CAMBIO: URL actualizada -->
+                                <textarea id="sms-3-editor" class="editable-textarea">Respira aire puro, vive tranquilo. Elige un futuro más saludable para ti y tu familia. Explora nuestros proyectos: https://aypch.com/lotes-campestres-valle-del-cauca/</textarea>
                             </div>
                         </div>
                         <div class="text-right mt-6">
@@ -252,15 +264,18 @@
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                              <div class="bg-green-50 p-4 rounded-lg border border-green-200">
                                 <h4 class="font-bold text-green-800 mb-2">Plantilla 1: Inspiradora</h4>
-                                <textarea id="wa-1-editor" class="editable-textarea bg-white">¡Hola *|NOMBRE|*! 👋\n\n¿Has pensado cuánto vale tu tranquilidad? Te invitamos a descubrir nuestros proyectos campestres, diseñados para que tú y tu familia respiren aire puro.\n\n✨ Dale un vistazo aquí: https://www.aypch.com/</textarea>
+                                <!-- CAMBIO: URL actualizada -->
+                                <textarea id="wa-1-editor" class="editable-textarea bg-white">¡Hola *|NOMBRE|*! 👋\n\n¿Has pensado cuánto vale tu tranquilidad? Te invitamos a descubrir nuestros proyectos campestres, diseñados para que tú y tu familia respiren aire puro.\n\n✨ Dale un vistazo aquí: https://aypch.com/lotes-campestres-valle-del-cauca/</textarea>
                             </div>
                              <div class="bg-green-50 p-4 rounded-lg border border-green-200">
                                 <h4 class="font-bold text-green-800 mb-2">Plantilla 2: Beneficios</h4>
-                                <textarea id="wa-2-editor" class="editable-textarea bg-white">¡Hola *|NOMBRE|*! 🌿 Tu salud te lo agradecerá.\n\nImagina un lugar donde puedas:\n✅ Despertar con la naturaleza.\n✅ Disfrutar de aire 100% puro.\n✅ Tener espacio para caminar y jugar.\n\n👉 Ver Proyectos: https://www.aypch.com/</textarea>
+                                <!-- CAMBIO: URL actualizada -->
+                                <textarea id="wa-2-editor" class="editable-textarea bg-white">¡Hola *|NOMBRE|*! 🌿 Tu salud te lo agradecerá.\n\nImagina un lugar donde puedas:\n✅ Despertar con la naturaleza.\n✅ Disfrutar de aire 100% puro.\n✅ Tener espacio para caminar y jugar.\n\n👉 Ver Proyectos: https://aypch.com/lotes-campestres-valle-del-cauca/</textarea>
                             </div>
                              <div class="bg-green-50 p-4 rounded-lg border border-green-200">
                                 <h4 class="font-bold text-green-800 mb-2">Plantilla 3: Conversacional</h4>
-                                <textarea id="wa-3-editor" class="editable-textarea bg-white">¡Hola *|NOMBRE|*! Te saluda [Tu Nombre] de AYPCH.\n\nVi que te interesa mejorar tu calidad de vida. ¿Te gustaría recibir información exclusiva sobre nuestros proyectos sin ningún compromiso?\n\nPuedes ver todos los detalles en nuestro sitio web: https://www.aypch.com/</textarea>
+                                <!-- CAMBIO: URL actualizada -->
+                                <textarea id="wa-3-editor" class="editable-textarea bg-white">¡Hola *|NOMBRE|*! Te saluda [Tu Nombre] de AYPCH.\n\nVi que te interesa mejorar tu calidad de vida. ¿Te gustaría recibir información exclusiva sobre nuestros proyectos sin ningún compromiso?\n\nPuedes ver todos los detalles en nuestro sitio web: https://aypch.com/lotes-campestres-valle-del-cauca/</textarea>
                             </div>
                         </div>
                         <div class="text-right mt-6">
@@ -298,7 +313,7 @@
                                 <input id="lead-conversion-slider" type="range" min="1" max="60" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
                             </div>
                         </div>
-                         <div class="mt-6 pt-5 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                       <div class="mt-6 pt-5 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                             <div>
                                 <p class="text-sm text-slate-500">Aperturas Proy.</p>
                                 <p id="projected-opens" class="font-lexend text-2xl font-bold text-slate-900">413</p>
@@ -988,14 +1003,14 @@
                 // Cargar Emails, SMS, WhatsApp
                 updateEmailPreview(currentEmailId, campaignData);
                 if (campaignData.sms) {
-                    smsEditors[0].value = campaignData.sms.sms_1_content || '';
-                    smsEditors[1].value = campaignData.sms.sms_2_content || '';
-                    smsEditors[2].value = campaignData.sms.sms_3_content || '';
+                    smsEditors[0].value = campaignData.sms.sms_1_content || document.getElementById('sms-1-editor').value;
+                    smsEditors[1].value = campaignData.sms.sms_2_content || document.getElementById('sms-2-editor').value;
+                    smsEditors[2].value = campaignData.sms.sms_3_content || document.getElementById('sms-3-editor').value;
                 }
                 if (campaignData.whatsapp) {
-                    waEditors[0].value = campaignData.whatsapp.wa_1_content || '';
-                    waEditors[1].value = campaignData.whatsapp.wa_2_content || '';
-                    waEditors[2].value = campaignData.whatsapp.wa_3_content || '';
+                    waEditors[0].value = campaignData.whatsapp.wa_1_content || document.getElementById('wa-1-editor').value;
+                    waEditors[1].value = campaignData.whatsapp.wa_2_content || document.getElementById('wa-2-editor').value;
+                    waEditors[2].value = campaignData.whatsapp.wa_3_content || document.getElementById('wa-3-editor').value;
                 }
 
                 // Cargar KPIs
